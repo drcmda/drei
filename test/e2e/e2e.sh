@@ -62,7 +62,7 @@ appname=nextapp
 appdir="$tmp/$appname"
 
 # create app
-(cd $tmp; npx -y create-next-app@14 $appname --ts --no-eslint --no-tailwind --no-src-dir --app --import-alias "@/*")
+(cd $tmp; npx -y create-next-app $appname --ts --no-eslint --no-tailwind --no-src-dir --app --import-alias "@/*")
 
 # drei
 (cd $appdir; npm i $TGZ)
