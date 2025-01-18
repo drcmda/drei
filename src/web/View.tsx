@@ -67,12 +67,19 @@ export type ViewProps = {
 
 function computeContainerPosition(canvasSize: LegacyCanvasSize | CanvasSize, trackRect: DOMRect) {
   const { right, top, left: trackLeft, bottom: trackBottom, width, height } = trackRect
-  const isOffscreen = trackRect.bottom < 0 || top > canvasSize.height || right < 0 || trackRect.left > canvasSize.width
+  const isOffscreen =
+    trackRect.bottom < 0 || top > window.innerHeight || right < 0 || trackRect.left > window.innerWidth
+
   if (isNonLegacyCanvasSize(canvasSize)) {
+    const isOffcanvs =
+      trackBottom < canvasSize.top ||
+      canvasSize.top + canvasSize.height < top ||
+      right < canvasSize.left ||
+      canvasSize.left + canvasSize.width < trackLeft
     const canvasBottom = canvasSize.top + canvasSize.height
     const bottom = canvasBottom - trackBottom
     const left = trackLeft - canvasSize.left
-    return { position: { width, height, left, top, bottom, right }, isOffscreen }
+    return { position: { width, height, left, top, bottom, right }, isOffscreen: isOffscreen || isOffcanvs }
   }
   // Fall back on old behavior if r3f < 8.1.0
   const bottom = canvasSize.height - trackBottom
