@@ -77,6 +77,7 @@ export * from './BBAnchor'
 export * from './TrailTexture'
 export * from './Example'
 export * from './SpriteAnimator'
+export * from './useVariants'
 
 // Modifiers
 export * from './CurveModifier'
