@@ -44,6 +44,14 @@ return (
     <meshStandardMaterial {...stencil} />
 ```
 
+You must unable stencil in your `<Canvas>` component to use the mask without `depthWrite` set to `true`.
+
+```jsx
+<Canvas gl={{ stencil: true }}>
+{/** Your scene **/}
+</Canvas>
+```
+
 You can build compound masks with multiple shapes by re-using an id. You can also use the mask as a normal mesh by providing `colorWrite` and `depthWrite` props.
 
 ```jsx
