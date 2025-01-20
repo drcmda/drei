@@ -4,7 +4,7 @@ import { suspend } from 'suspend-react'
 
 export const useDetectGPU = (props?: GetGPUTier) => suspend(() => getGPUTier(props), ['useDetectGPU'])
 
-type DetectGPUProps = {
+export type DetectGPUProps = {
   children?: (result: ReturnType<typeof useDetectGPU>) => React.ReactNode
 } & Parameters<typeof useDetectGPU>[0]
 

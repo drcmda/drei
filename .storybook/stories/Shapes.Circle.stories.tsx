@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Circle>
 
 function CircleScene(props: React.ComponentProps<typeof Circle>) {
-  const ref = useTurntable<React.ElementRef<typeof Circle>>()
+  const ref = useTurntable<React.ComponentRef<typeof Circle>>()
 
   return (
     <Circle ref={ref} {...props}>

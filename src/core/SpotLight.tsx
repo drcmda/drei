@@ -16,7 +16,7 @@ import {
   RepeatWrapping,
   Object3D,
 } from 'three'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { FullScreenQuad } from 'three-stdlib'
 import { SpotLightMaterial } from '../materials/SpotLightMaterial'
 
@@ -24,7 +24,7 @@ import { SpotLightMaterial } from '../materials/SpotLightMaterial'
 import SpotlightShadowShader from '../helpers/glsl/DefaultSpotlightShadowShadows.glsl'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-type SpotLightProps = JSX.IntrinsicElements['spotLight'] & {
+export type SpotLightProps = Omit<ThreeElements['spotLight'], 'ref'> & {
   depthBuffer?: DepthTexture
   attenuation?: number
   anglePower?: number
@@ -94,8 +94,8 @@ function VolumetricMesh({
 }
 
 function useCommon(
-  spotlight: React.MutableRefObject<SpotLightImpl>,
-  mesh: React.MutableRefObject<Mesh>,
+  spotlight: React.RefObject<SpotLightImpl>,
+  mesh: React.RefObject<Mesh>,
   width: number,
   height: number,
   distance: number

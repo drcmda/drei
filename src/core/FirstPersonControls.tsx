@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { EventManager, Object3DNode, useFrame, useThree } from '@react-three/fiber'
+import { EventManager, ThreeElement, useFrame, useThree } from '@react-three/fiber'
 import { FirstPersonControls as FirstPersonControlImpl } from 'three-stdlib'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type FirstPersonControlsProps = Object3DNode<FirstPersonControlImpl, typeof FirstPersonControlImpl> & {
+export type FirstPersonControlsProps = Omit<ThreeElement<typeof FirstPersonControlImpl>, 'ref'> & {
   domElement?: HTMLElement
   makeDefault?: boolean
 }

@@ -22,18 +22,16 @@ export default {
 
 type Story = StoryObj<typeof CubeCamera>
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      axisHelper: object
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    axisHelper: object
   }
 }
 
 function Sphere({ offset = 0, ...props }: ComponentProps<typeof CubeCamera> & { offset?: number }) {
-  const ref = React.useRef<React.ElementRef<'mesh'>>(null)
+  const ref = React.useRef<THREE.Mesh>(null!)
   useFrame(({ clock }) => {
-    ref.current!.position.y = Math.sin(offset + clock.elapsedTime) * 5
+    ref.current.position.y = Math.sin(offset + clock.elapsedTime) * 5
   })
 
   return (

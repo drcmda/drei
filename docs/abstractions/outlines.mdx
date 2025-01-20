@@ -12,7 +12,7 @@ sourcecode: src/core/Outlines.tsx
 An ornamental component that extracts the geometry from its parent and displays an [inverted-hull outline](https://bnpr.gitbook.io/bnpr/outline/inverse-hull-method). Supported parents are `<mesh>`, `<skinnedMesh>` and `<instancedMesh>`.
 
 ```tsx
-type OutlinesProps = JSX.IntrinsicElements['group'] & {
+type OutlinesProps = ThreeElements['group'] & {
   /** Outline color, default: black */
   color: ReactThreeFiber.Color
   /** Line thickness is independent of zoom, default: false */

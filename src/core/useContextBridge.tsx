@@ -6,7 +6,7 @@ export function useContextBridge(...contexts: Array<React.Context<any>>) {
   cRef.current = contexts.map((context) => React.useContext(context))
   return React.useMemo(
     () =>
-      ({ children }: { children: React.ReactNode }): JSX.Element =>
+      ({ children }: { children: React.ReactNode }): React.JSX.Element =>
         contexts.reduceRight(
           (acc, Context, i) => <Context.Provider value={cRef.current[i]} children={acc} />,
           children
@@ -15,7 +15,7 @@ export function useContextBridge(...contexts: Array<React.Context<any>>) {
            * https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44572#issuecomment-625878049
            * https://github.com/microsoft/TypeScript/issues/14729
            */
-        ) as unknown as JSX.Element,
+        ) as unknown as React.JSX.Element,
     []
   )
 }

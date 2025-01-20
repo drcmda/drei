@@ -60,8 +60,7 @@ export const ScalingSphere: React.FC<{ direction: THREE.Vector3; axis: 0 | 1 | 2
   } = React.useContext(context)
 
   const size = useThree((state) => state.size)
-  // @ts-expect-error new in @react-three/fiber@7.0.5
-  const camControls = useThree((state) => state.controls) as { enabled: boolean }
+  const camControls = useThree((state) => state.controls) as unknown as { enabled: boolean } | undefined
   const divRef = React.useRef<HTMLDivElement>(null!)
   const objRef = React.useRef<THREE.Group>(null!)
   const meshRef = React.useRef<THREE.Mesh>(null!)

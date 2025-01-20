@@ -10,7 +10,6 @@ import {
 import { RGBELoader, EXRLoader } from 'three-stdlib'
 import { GainMapLoader, HDRJPGLoader } from '@monogrid/gainmap-js'
 import { presetsObj, PresetsType } from '../helpers/environment-assets'
-import { LinearEncoding, sRGBEncoding, TextureEncoding } from '../helpers/deprecated'
 import { useLayoutEffect } from 'react'
 
 const CUBEMAP_ROOT = 'https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/'
@@ -21,7 +20,7 @@ export type EnvironmentLoaderProps = {
   path?: string
   preset?: PresetsType
   extensions?: (loader: Loader) => void
-  encoding?: TextureEncoding
+  colorSpace?: THREE.ColorSpace
 }
 
 const defaultFiles = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png']
@@ -30,12 +29,9 @@ export function useEnvironment({
   files = defaultFiles,
   path = '',
   preset = undefined,
-  encoding = undefined,
+  colorSpace = undefined,
   extensions,
 }: Partial<EnvironmentLoaderProps> = {}) {
-  let loader: typeof Loader | null = null
-  let multiFile: boolean = false
-
   if (preset) {
     validatePreset(preset)
     files = presetsObj[preset]
@@ -43,11 +39,11 @@ export function useEnvironment({
   }
 
   // Everything else
-  multiFile = isArray(files)
+  const multiFile = isArray(files)
 
   const { extension, isCubemap } = getExtension(files)
 
-  loader = getLoader(extension)
+  const loader = getLoader(extension)
   if (!loader) throw new Error('useEnvironment: Unrecognized file extension: ' + files)
 
   const gl = useThree((state) => state.gl)
@@ -57,26 +53,23 @@ export function useEnvironment({
     if (extension !== 'webp' && extension !== 'jpg' && extension !== 'jpeg') return
 
     function clearGainmapTexture() {
-      useLoader.clear(
-        // @ts-expect-error
-        loader,
-        multiFile ? [files] : files
-      )
+      useLoader.clear(loader!, (multiFile ? [files] : files) as string | string[] | string[][])
     }
 
     gl.domElement.addEventListener('webglcontextlost', clearGainmapTexture, { once: true })
   }, [files, gl.domElement])
 
   const loaderResult: Texture | Texture[] = useLoader(
-    // @ts-expect-error
     loader,
-    multiFile ? [files] : files,
+    (multiFile ? [files] : files) as string | string[] | string[][],
     (loader) => {
       // Gainmap requires a renderer
       if (extension === 'webp' || extension === 'jpg' || extension === 'jpeg') {
+        // @ts-expect-error
         loader.setRenderer(gl)
       }
       loader.setPath?.(path)
+      // @ts-expect-error
       if (extensions) extensions(loader)
     }
   ) as Texture | Texture[]
@@ -91,8 +84,7 @@ export function useEnvironment({
 
   texture.mapping = isCubemap ? CubeReflectionMapping : EquirectangularReflectionMapping
 
-  if ('colorSpace' in texture) (texture as any).colorSpace = (encoding ?? isCubemap) ? 'srgb' : 'srgb-linear'
-  else (texture as any).encoding = (encoding ?? isCubemap) ? sRGBEncoding : LinearEncoding
+  texture.colorSpace = colorSpace ?? (isCubemap ? 'srgb' : 'srgb-linear')
 
   return texture
 }
@@ -125,15 +117,11 @@ useEnvironment.preload = (preloadOptions?: EnvironmentLoaderPreloadOptions) => {
   const loader = getLoader(extension)
   if (!loader) throw new Error('useEnvironment: Unrecognized file extension: ' + files)
 
-  useLoader.preload(
+  useLoader.preload(loader, isArray(files) ? [files] : files, (loader) => {
+    loader.setPath?.(path)
     // @ts-expect-error
-    loader,
-    isArray(files) ? [files] : files,
-    (loader) => {
-      loader.setPath?.(path)
-      if (extensions) extensions(loader)
-    }
-  )
+    if (extensions) extensions(loader)
+  })
 }
 
 type EnvironmentLoaderClearOptions = Pick<EnvironmentLoaderProps, 'files' | 'preset'>
@@ -155,11 +143,7 @@ useEnvironment.clear = (clearOptions?: EnvironmentLoaderClearOptions) => {
   const { extension } = getExtension(files)
   const loader = getLoader(extension)
   if (!loader) throw new Error('useEnvironment: Unrecognized file extension: ' + files)
-  useLoader.clear(
-    // @ts-expect-error
-    loader,
-    isArray(files) ? [files] : files
-  )
+  useLoader.clear(loader, isArray(files) ? [files] : files)
 }
 
 function validatePreset(preset: string) {
@@ -188,7 +172,7 @@ function getExtension(files: string | string[]) {
 }
 
 function getLoader(extension: string | undefined) {
-  const loader: typeof Loader | null =
+  const loader =
     extension === 'cube'
       ? CubeTextureLoader
       : extension === 'hdr'
@@ -196,9 +180,9 @@ function getLoader(extension: string | undefined) {
         : extension === 'exr'
           ? EXRLoader
           : extension === 'jpg' || extension === 'jpeg'
-            ? (HDRJPGLoader as unknown as typeof Loader)
+            ? HDRJPGLoader
             : extension === 'webp'
-              ? (GainMapLoader as unknown as typeof Loader)
+              ? GainMapLoader
               : null
 
   return loader

@@ -1,7 +1,7 @@
 /* eslint react-hooks/exhaustive-deps: 1 */
 import * as React from 'react'
 import * as THREE from 'three'
-import { useThree } from '@react-three/fiber'
+import { ThreeElements, useThree } from '@react-three/fiber'
 
 import { Line } from '../core/Line'
 
@@ -40,7 +40,7 @@ export type FacemeshProps = {
   eyesAsOrigin?: boolean
   /** debug mode, default: false */
   debug?: boolean
-} & Omit<JSX.IntrinsicElements['group'], 'ref'>
+} & Omit<ThreeElements['group'], 'ref'>
 
 export type FacemeshApi = {
   meshRef: React.RefObject<THREE.Mesh>
@@ -266,12 +266,13 @@ export const Facemesh = /* @__PURE__ */ React.forwardRef<FacemeshApi, FacemeshPr
     //
 
     const api = React.useMemo<FacemeshApi>(
-      () => ({
-        outerRef,
-        meshRef,
-        eyeRightRef,
-        eyeLeftRef,
-      }),
+      () =>
+        ({
+          outerRef,
+          meshRef,
+          eyeRightRef,
+          eyeLeftRef,
+        }) as FacemeshApi,
       []
     )
     React.useImperativeHandle(fref, () => api, [api])
@@ -433,12 +434,13 @@ export const FacemeshEye = /* @__PURE__ */ React.forwardRef<FacemeshEyeApi, Face
     //
 
     const api = React.useMemo<FacemeshEyeApi>(
-      () => ({
-        eyeMeshRef: eyeMeshRef,
-        irisDirRef: irisDirRef,
-        _computeSphere,
-        _update,
-      }),
+      () =>
+        ({
+          eyeMeshRef: eyeMeshRef,
+          irisDirRef: irisDirRef,
+          _computeSphere,
+          _update,
+        }) as FacemeshEyeApi,
       [_computeSphere, _update]
     )
     React.useImperativeHandle(fref, () => api, [api])

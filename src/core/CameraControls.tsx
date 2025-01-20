@@ -16,14 +16,14 @@ import {
 
 import * as React from 'react'
 import { forwardRef, useMemo, useEffect } from 'react'
-import { extend, useFrame, useThree, ReactThreeFiber, EventManager } from '@react-three/fiber'
+import { extend, useFrame, useThree, ReactThreeFiber, EventManager, ThreeElement } from '@react-three/fiber'
 
 import CameraControlsImpl from 'camera-controls'
-import { ForwardRefComponent } from '../helpers/ts-utils'
+import { ForwardRefComponent, Overwrite } from '../helpers/ts-utils'
 
 export type CameraControlsProps = Omit<
-  ReactThreeFiber.Overwrite<
-    ReactThreeFiber.Node<CameraControlsImpl, typeof CameraControlsImpl>,
+  Overwrite<
+    ThreeElement<typeof CameraControlsImpl>,
     {
       camera?: PerspectiveCamera | OrthographicCamera
       domElement?: HTMLElement
@@ -35,7 +35,7 @@ export type CameraControlsProps = Omit<
       regress?: boolean
     }
   >,
-  'ref' | keyof EventDispatcher
+  'ref' | 'args' | keyof EventDispatcher
 >
 
 export const CameraControls: ForwardRefComponent<CameraControlsProps, CameraControlsImpl> = /* @__PURE__ */ forwardRef<

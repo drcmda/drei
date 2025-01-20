@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Sphere>
 
 function SphereScene(props: React.ComponentProps<typeof Sphere>) {
-  const ref = useTurntable<React.ElementRef<typeof Sphere>>()
+  const ref = useTurntable<React.ComponentRef<typeof Sphere>>()
 
   return (
     <Sphere ref={ref} {...props}>

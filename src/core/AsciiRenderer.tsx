@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { AsciiEffect } from 'three-stdlib'
 
-type AsciiRendererProps = {
+export type AsciiRendererProps = {
   /** Render index, default: 1 */
   renderIndex?: number
   /** CSS background color (can be "transparent"), default: black */

@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import * as THREE from 'three'
-import { extend, useFrame } from '@react-three/fiber'
+import { extend, ThreeElements, useFrame } from '@react-three/fiber'
 import { shaderMaterial } from './shaderMaterial'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 import { version } from '../helpers/constants'
@@ -38,16 +38,15 @@ export type GridMaterialType = {
   side?: THREE.Side
 }
 
-export type GridProps = GridMaterialType & {
-  /** Default plane-geometry arguments */
-  args?: ConstructorParameters<typeof THREE.PlaneGeometry>
-}
+export type GridProps = Omit<ThreeElements['mesh'], 'ref' | 'args'> &
+  GridMaterialType & {
+    /** Default plane-geometry arguments */
+    args?: ConstructorParameters<typeof THREE.PlaneGeometry>
+  }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      gridMaterial: JSX.IntrinsicElements['shaderMaterial'] & GridMaterialType
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    gridMaterial: ThreeElements['shaderMaterial'] & GridMaterialType
   }
 }
 
@@ -131,53 +130,52 @@ const GridMaterial = /* @__PURE__ */ shaderMaterial(
   `
 )
 
-export const Grid: ForwardRefComponent<Omit<JSX.IntrinsicElements['mesh'], 'args'> & GridProps, THREE.Mesh> =
-  /* @__PURE__ */ React.forwardRef(
-    (
-      {
-        args,
-        cellColor = '#000000',
-        sectionColor = '#2080ff',
-        cellSize = 0.5,
-        sectionSize = 1,
-        followCamera = false,
-        infiniteGrid = false,
-        fadeDistance = 100,
-        fadeStrength = 1,
-        fadeFrom = 1,
-        cellThickness = 0.5,
-        sectionThickness = 1,
-        side = THREE.BackSide,
-        ...props
-      }: Omit<JSX.IntrinsicElements['mesh'], 'args'> & GridProps,
-      fRef: React.ForwardedRef<THREE.Mesh>
-    ) => {
-      extend({ GridMaterial })
+export const Grid: ForwardRefComponent<GridProps, THREE.Mesh> = /* @__PURE__ */ React.forwardRef(
+  (
+    {
+      args,
+      cellColor = '#000000',
+      sectionColor = '#2080ff',
+      cellSize = 0.5,
+      sectionSize = 1,
+      followCamera = false,
+      infiniteGrid = false,
+      fadeDistance = 100,
+      fadeStrength = 1,
+      fadeFrom = 1,
+      cellThickness = 0.5,
+      sectionThickness = 1,
+      side = THREE.BackSide,
+      ...props
+    },
+    fRef
+  ) => {
+    extend({ GridMaterial })
 
-      const ref = React.useRef<THREE.Mesh>(null!)
-      React.useImperativeHandle(fRef, () => ref.current, [])
-      const plane = new THREE.Plane()
-      const upVector = new THREE.Vector3(0, 1, 0)
-      const zeroVector = new THREE.Vector3(0, 0, 0)
-      useFrame((state) => {
-        plane.setFromNormalAndCoplanarPoint(upVector, zeroVector).applyMatrix4(ref.current.matrixWorld)
+    const ref = React.useRef<THREE.Mesh>(null!)
+    React.useImperativeHandle(fRef, () => ref.current, [])
+    const plane = new THREE.Plane()
+    const upVector = new THREE.Vector3(0, 1, 0)
+    const zeroVector = new THREE.Vector3(0, 0, 0)
+    useFrame((state) => {
+      plane.setFromNormalAndCoplanarPoint(upVector, zeroVector).applyMatrix4(ref.current.matrixWorld)
 
-        const gridMaterial = ref.current.material as THREE.ShaderMaterial
-        const worldCamProjPosition = gridMaterial.uniforms.worldCamProjPosition as THREE.Uniform<THREE.Vector3>
-        const worldPlanePosition = gridMaterial.uniforms.worldPlanePosition as THREE.Uniform<THREE.Vector3>
+      const gridMaterial = ref.current.material as THREE.ShaderMaterial
+      const worldCamProjPosition = gridMaterial.uniforms.worldCamProjPosition as THREE.Uniform<THREE.Vector3>
+      const worldPlanePosition = gridMaterial.uniforms.worldPlanePosition as THREE.Uniform<THREE.Vector3>
 
-        plane.projectPoint(state.camera.position, worldCamProjPosition.value)
-        worldPlanePosition.value.set(0, 0, 0).applyMatrix4(ref.current.matrixWorld)
-      })
+      plane.projectPoint(state.camera.position, worldCamProjPosition.value)
+      worldPlanePosition.value.set(0, 0, 0).applyMatrix4(ref.current.matrixWorld)
+    })
 
-      const uniforms1 = { cellSize, sectionSize, cellColor, sectionColor, cellThickness, sectionThickness }
-      const uniforms2 = { fadeDistance, fadeStrength, fadeFrom, infiniteGrid, followCamera }
+    const uniforms1 = { cellSize, sectionSize, cellColor, sectionColor, cellThickness, sectionThickness }
+    const uniforms2 = { fadeDistance, fadeStrength, fadeFrom, infiniteGrid, followCamera }
 
-      return (
-        <mesh ref={ref} frustumCulled={false} {...props}>
-          <gridMaterial transparent extensions-derivatives side={side} {...uniforms1} {...uniforms2} />
-          <planeGeometry args={args} />
-        </mesh>
-      )
-    }
-  )
+    return (
+      <mesh ref={ref} frustumCulled={false} {...props}>
+        <gridMaterial transparent extensions-derivatives side={side} {...uniforms1} {...uniforms2} />
+        <planeGeometry args={args} />
+      </mesh>
+    )
+  }
+)

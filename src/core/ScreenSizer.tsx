@@ -1,4 +1,4 @@
-import { Object3DProps, useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import * as React from 'react'
 import { forwardRef, useRef } from 'react'
 import { Object3D, Vector3 } from 'three'
@@ -7,7 +7,7 @@ import { ForwardRefComponent } from '../helpers/ts-utils'
 
 const worldPos = /* @__PURE__ */ new Vector3()
 
-export interface ScreenSizerProps extends Object3DProps {
+export type ScreenSizerProps = Omit<ThreeElements['object3D'], 'ref'> & {
   /** Scale factor. Defaults to 1, which equals 1 pixel size. */
   scale?: number
 }

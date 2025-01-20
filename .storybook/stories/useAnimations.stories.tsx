@@ -41,7 +41,7 @@ type Story = StoryObj<typeof UseAnimation>
 useGLTF.preload('ybot.glb')
 
 function UseAnimationsScene(props: React.ComponentProps<typeof UseAnimation>) {
-  const root = React.useRef<React.ElementRef<'group'>>(null)
+  const root = React.useRef<React.ComponentRef<'group'>>(null)
   const { nodes, animations } = useGLTF('ybot.glb') as GLTF & {
     nodes: {
       YB_Body: THREE.SkinnedMesh

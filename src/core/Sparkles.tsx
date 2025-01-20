@@ -1,25 +1,8 @@
 import * as React from 'react'
 import * as THREE from 'three'
-import { PointsProps, useThree, useFrame, extend, MaterialNode } from '@react-three/fiber'
+import { useThree, useFrame, extend, ThreeElement, ThreeElements } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 import { version } from '../helpers/constants'
-
-interface Props {
-  /** Number of particles (default: 100) */
-  count?: number
-  /** Speed of particles (default: 1) */
-  speed?: number | Float32Array
-  /** Opacity of particles (default: 1) */
-  opacity?: number | Float32Array
-  /** Color of particles (default: 100) */
-  color?: THREE.ColorRepresentation | Float32Array
-  /** Size of particles (default: randomized between 0 and 1) */
-  size?: number | Float32Array
-  /** The space the particles occupy (default: 1) */
-  scale?: number | [number, number, number] | THREE.Vector3
-  /** Movement factor (default: 1) */
-  noise?: number | [number, number, number] | THREE.Vector3 | Float32Array
-}
 
 class SparklesImplMaterial extends THREE.ShaderMaterial {
   constructor() {
@@ -81,11 +64,9 @@ class SparklesImplMaterial extends THREE.ShaderMaterial {
   }
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      sparklesImplMaterial: MaterialNode<SparklesImplMaterial, typeof SparklesImplMaterial>
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    sparklesImplMaterial: ThreeElement<typeof SparklesImplMaterial>
   }
 }
 
@@ -125,9 +106,26 @@ function usePropAsIsOrAsAttribute<T extends any>(
   }, [prop])
 }
 
-export const Sparkles: ForwardRefComponent<Props & PointsProps, THREE.Points> = /* @__PURE__ */ React.forwardRef<
+export type SparklesProps = Omit<ThreeElements['points'], 'ref'> & {
+  /** Number of particles (default: 100) */
+  count?: number
+  /** Speed of particles (default: 1) */
+  speed?: number | Float32Array
+  /** Opacity of particles (default: 1) */
+  opacity?: number | Float32Array
+  /** Color of particles (default: 100) */
+  color?: THREE.ColorRepresentation | Float32Array
+  /** Size of particles (default: randomized between 0 and 1) */
+  size?: number | Float32Array
+  /** The space the particles occupy (default: 1) */
+  scale?: number | [number, number, number] | THREE.Vector3
+  /** Movement factor (default: 1) */
+  noise?: number | [number, number, number] | THREE.Vector3 | Float32Array
+}
+
+export const Sparkles: ForwardRefComponent<SparklesProps, THREE.Points> = /* @__PURE__ */ React.forwardRef<
   THREE.Points,
-  Props & PointsProps
+  SparklesProps
 >(({ noise = 1, count = 100, speed = 1, opacity = 1, scale = 1, size, color, children, ...props }, forwardRef) => {
   React.useMemo(() => extend({ SparklesImplMaterial }), [])
   const ref = React.useRef<THREE.Points>(null!)

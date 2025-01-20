@@ -22,7 +22,7 @@ export default {
 type Story = StoryObj<typeof Fbo>
 
 function SpinningThing() {
-  const mesh = React.useRef<React.ElementRef<typeof TorusKnot>>(null!)
+  const mesh = React.useRef<React.ComponentRef<typeof TorusKnot>>(null!)
 
   useFrame(() => {
     mesh.current.rotation.x = mesh.current.rotation.y = mesh.current.rotation.z += 0.01
@@ -40,7 +40,7 @@ function FboScene(props: React.ComponentProps<typeof Fbo>) {
 }
 
 function TargetWrapper({ target }: { target: THREE.WebGLRenderTarget }) {
-  const cam = React.useRef<React.ElementRef<typeof PerspectiveCamera>>(null!)
+  const cam = React.useRef<React.ComponentRef<typeof PerspectiveCamera>>(null!)
 
   const scene = React.useMemo(() => {
     const scene = new THREE.Scene()

@@ -208,12 +208,11 @@ export function useTrailTexture(config: Partial<TrailConfig> = {}): [Texture, (T
 
 //
 
-export const TrailTexture = ({
-  children,
-  ...config
-}: {
+export type TrailTextureProps = {
   children?: (texture: ReturnType<typeof useTrailTexture>) => React.ReactNode
-} & TrailConfig) => {
+} & TrailConfig
+
+export const TrailTexture = ({ children, ...config }: TrailTextureProps) => {
   const ret = useTrailTexture(config)
 
   return <>{children?.(ret)}</>

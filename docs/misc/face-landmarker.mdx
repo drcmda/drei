@@ -52,7 +52,7 @@ faceLandmarkerOptions.baseOptions.modelAssetPath = modelAssetPath;
 You can get the FaceLandmarker instance through `ref`:
 
 ```tsx
-const faceLandmarkerRef = useRef<ElementRef<typeof FaceLandmarker>>(null)
+const faceLandmarkerRef = useRef<ComponentRef<typeof FaceLandmarker>>(null)
 
 <FaceLandmarker ref={faceLandmarkerRef}>
   {/* ... */}

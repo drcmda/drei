@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import * as React from 'react'
-import { createPortal, useFrame, useThree } from '@react-three/fiber'
+import { createPortal, ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { useFBO } from './Fbo'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-type Props = JSX.IntrinsicElements['texture'] & {
+export type RenderTextureProps = Omit<ThreeElements['texture'], 'ref' | 'args'> & {
   /** Optional width of the texture, defaults to viewport bounds */
   width?: number
   /** Optional height of the texture, defaults to viewport bounds */
@@ -29,7 +29,7 @@ type Props = JSX.IntrinsicElements['texture'] & {
   children: React.ReactNode
 }
 
-export const RenderTexture: ForwardRefComponent<Props, THREE.Texture> = /* @__PURE__ */ React.forwardRef(
+export const RenderTexture: ForwardRefComponent<RenderTextureProps, THREE.Texture> = /* @__PURE__ */ React.forwardRef(
   (
     {
       children,
@@ -44,7 +44,7 @@ export const RenderTexture: ForwardRefComponent<Props, THREE.Texture> = /* @__PU
       depthBuffer = true,
       generateMipmaps = false,
       ...props
-    }: Props,
+    },
     forwardRef
   ) => {
     const { size, viewport } = useThree()
@@ -60,9 +60,9 @@ export const RenderTexture: ForwardRefComponent<Props, THREE.Texture> = /* @__PU
       // Since this is only a texture it does not have an easy way to obtain the parent, which we
       // need to transform event coordinates to local coordinates. We use r3f internals to find the
       // next Object3D.
-      let parent = (fbo.texture as any)?.__r3f.parent
+      let parent = (fbo.texture as any)?.__r3f.parent?.object
       while (parent && !(parent instanceof THREE.Object3D)) {
-        parent = parent.__r3f.parent
+        parent = parent.__r3f.parent?.object
       }
       if (!parent) return false
       // First we call the previous state-onion-layers compute, this is what makes it possible to nest portals

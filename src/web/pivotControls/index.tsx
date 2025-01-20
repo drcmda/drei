@@ -32,7 +32,7 @@ const xDir = /* @__PURE__ */ new THREE.Vector3(1, 0, 0)
 const yDir = /* @__PURE__ */ new THREE.Vector3(0, 1, 0)
 const zDir = /* @__PURE__ */ new THREE.Vector3(0, 0, 1)
 
-type PivotControlsProps = {
+export type PivotControlsProps = {
   /** Enables/disables the control, true */
   enabled?: boolean
   /** Scale of the gizmo, 1 */

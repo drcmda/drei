@@ -49,7 +49,7 @@ export const BasicSegmentsSt = {
 //
 
 function AnimatedSegments(props: React.ComponentProps<typeof Segments>) {
-  const ref = React.useRef<React.ElementRef<typeof Segment>[]>([])
+  const ref = React.useRef<React.ComponentRef<typeof Segment>[]>([])
   useFrame(({ clock }) => {
     ref.current.forEach((r, i) => {
       const time = clock.elapsedTime
@@ -64,7 +64,16 @@ function AnimatedSegments(props: React.ComponentProps<typeof Segments>) {
   return (
     <Segments {...props}>
       {Array.from({ length: 10000 }).map((_, i) => (
-        <Segment key={i} ref={(r) => (ref.current[i] = r!)} color="orange" start={[0, 0, 0]} end={[0, 0, 0]} />
+        <Segment
+          key={i}
+          ref={(r) => {
+            ref.current[i] = r!
+            return () => void (ref.current[i] = null!)
+          }}
+          color="orange"
+          start={[0, 0, 0]}
+          end={[0, 0, 0]}
+        />
       ))}
     </Segments>
   )

@@ -1,26 +1,22 @@
 import * as React from 'react'
 import * as THREE from 'three'
-import { extend, MeshProps, Node } from '@react-three/fiber'
+import { extend, ThreeElement, ThreeElements } from '@react-three/fiber'
 import { useMemo } from 'react'
-import { suspend } from 'suspend-react'
-import { mergeVertices, TextGeometry, TextGeometryParameters, FontLoader } from 'three-stdlib'
+import { mergeVertices, TextGeometry, TextGeometryParameters } from 'three-stdlib'
 import { useFont, FontData } from './useFont'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      renamedTextGeometry: Node<any, any>
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    renamedTextGeometry: ThreeElement<typeof TextGeometry>
   }
 }
 
-type Text3DProps = {
+export type Text3DProps = Omit<ThreeElements['mesh'], 'ref'> & {
   font: FontData | string
   bevelSegments?: number
   smooth?: number
-} & Omit<TextGeometryParameters, 'font'> &
-  MeshProps
+} & Omit<TextGeometryParameters, 'font'>
 
 const types = ['string', 'number']
 const getTextFromChildren = (children) => {
@@ -110,7 +106,7 @@ export const Text3D: ForwardRefComponent<
 
     return (
       <mesh {...props} ref={ref}>
-        <renamedTextGeometry args={args} />
+        <renamedTextGeometry args={args as ThreeElements['renamedTextGeometry']['args']} />
         {rest}
       </mesh>
     )

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type FloatProps = JSX.IntrinsicElements['group'] & {
+export type FloatProps = Omit<ThreeElements['group'], 'ref'> & {
   enabled?: boolean
   speed?: number
   rotationIntensity?: number

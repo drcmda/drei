@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useThree, createPortal, useFrame, extend, Object3DNode, Euler, applyProps } from '@react-three/fiber'
+import { useThree, createPortal, useFrame, extend, Euler, applyProps, ThreeElement } from '@react-three/fiber'
 import { WebGLCubeRenderTarget, Texture, Scene, CubeCamera, HalfFloatType, CubeTexture } from 'three'
 import { GroundProjectedEnv as GroundProjectedEnvImpl } from 'three-stdlib'
 import { PresetsType } from '../helpers/environment-assets'
@@ -23,7 +23,7 @@ export type EnvironmentProps = {
 
   map?: Texture
   preset?: PresetsType
-  scene?: Scene | React.MutableRefObject<Scene>
+  scene?: Scene | React.RefObject<Scene>
   ground?:
     | boolean
     | {
@@ -33,12 +33,12 @@ export type EnvironmentProps = {
       }
 } & EnvironmentLoaderProps
 
-const isRef = (obj: any): obj is React.MutableRefObject<Scene> => obj.current && obj.current.isScene
-const resolveScene = (scene: Scene | React.MutableRefObject<Scene>) => (isRef(scene) ? scene.current : scene)
+const isRef = (obj: any): obj is React.RefObject<Scene> => obj.current && obj.current.isScene
+const resolveScene = (scene: Scene | React.RefObject<Scene>) => (isRef(scene) ? scene.current : scene)
 
 function setEnvProps(
   background: boolean | 'only',
-  scene: Scene | React.MutableRefObject<Scene> | undefined,
+  scene: Scene | React.RefObject<Scene> | undefined,
   defaultScene: Scene,
   texture: Texture,
   sceneProps: Partial<EnvironmentProps> = {}
@@ -202,11 +202,9 @@ export function EnvironmentPortal({
   )
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      groundProjectedEnvImpl: Object3DNode<GroundProjectedEnvImpl, typeof GroundProjectedEnvImpl>
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    groundProjectedEnvImpl: ThreeElement<typeof GroundProjectedEnvImpl>
   }
 }
 

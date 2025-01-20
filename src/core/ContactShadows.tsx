@@ -3,11 +3,11 @@
 
 import * as React from 'react'
 import * as THREE from 'three'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type ContactShadowsProps = {
+export type ContactShadowsProps = Omit<ThreeElements['group'], 'ref' | 'scale'> & {
   opacity?: number
   width?: number
   height?: number
@@ -22,10 +22,7 @@ export type ContactShadowsProps = {
   depthWrite?: boolean
 }
 
-export const ContactShadows: ForwardRefComponent<
-  Omit<JSX.IntrinsicElements['group'], 'scale'> & ContactShadowsProps,
-  THREE.Group
-> = /* @__PURE__ */ React.forwardRef(
+export const ContactShadows: ForwardRefComponent<ContactShadowsProps, THREE.Group> = /* @__PURE__ */ React.forwardRef(
   (
     {
       scale = 10,
@@ -42,7 +39,7 @@ export const ContactShadows: ForwardRefComponent<
       depthWrite = false,
       renderOrder,
       ...props
-    }: Omit<JSX.IntrinsicElements['group'], 'scale'> & ContactShadowsProps,
+    },
     fref
   ) => {
     const ref = React.useRef<THREE.Group>(null!)

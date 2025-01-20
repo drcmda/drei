@@ -39,7 +39,7 @@ function Diamond({
   rotation: React.ComponentProps<'mesh'>['rotation']
   position: React.ComponentProps<'mesh'>['position']
 } & React.ComponentProps<typeof MeshRefractionMaterial>) {
-  const ref = React.useRef<React.ElementRef<'mesh'>>(null)
+  const ref = React.useRef<React.ComponentRef<'mesh'>>(null)
   const { nodes } = useGLTF('/dflat.glb') as any
   // Use a custom envmap/scene-backdrop for the diamond material
   // This way we can have a clear BG while cube-cam can still film other objects

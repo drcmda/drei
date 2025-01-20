@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Torus>
 
 function TorusScene(props: React.ComponentProps<typeof Torus>) {
-  const ref = useTurntable<React.ElementRef<typeof Torus>>()
+  const ref = useTurntable<React.ComponentRef<typeof Torus>>()
 
   return (
     <Torus ref={ref} {...props}>

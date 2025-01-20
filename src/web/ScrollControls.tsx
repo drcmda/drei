@@ -271,7 +271,7 @@ interface ScrollPropsWithTrueHtml {
   style?: React.CSSProperties
 }
 
-type ScrollProps = ScrollPropsWithFalseHtml | ScrollPropsWithTrueHtml
+export type ScrollProps = ScrollPropsWithFalseHtml | ScrollPropsWithTrueHtml
 
 export const Scroll: ForwardRefComponent<ScrollProps, THREE.Group & HTMLDivElement> = /* @__PURE__ */ React.forwardRef(
   ({ html, ...props }: ScrollProps, ref) => {

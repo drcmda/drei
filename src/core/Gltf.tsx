@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { GLTFLoader, DRACOLoader, MeshoptDecoder, GLTF } from 'three-stdlib'
 import { ObjectMap, useLoader } from '@react-three/fiber'
-import { Clone } from './Clone'
+import { Clone, CloneProps } from './Clone'
 
 let dracoLoader: DRACOLoader | null = null
 let decoderPath: string = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/'
@@ -47,10 +47,9 @@ useGLTF.setDecoderPath = (path: string) => {
 
 //
 
-type CloneProps = React.ComponentProps<typeof Clone>
-type GltfRef = React.ElementRef<typeof Clone>
+type GltfRef = React.ComponentRef<typeof Clone>
 
-type GltfProps = Omit<CloneProps, 'object'> & {
+export type GltfProps = Omit<CloneProps, 'object'> & {
   src: string // simple string, not a string[] as useGLTF supports (otherwise we should render multiple <Clone>s?)
   useDraco?: UseDraco
   useMeshOpt?: UseMeshopt

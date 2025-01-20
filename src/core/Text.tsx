@@ -1,11 +1,11 @@
 import * as React from 'react'
 // @ts-ignore
 import { Text as TextMeshImpl, preloadFont } from 'troika-three-text'
-import { ReactThreeFiber, useThree } from '@react-three/fiber'
+import { ReactThreeFiber, ThreeElements, useThree } from '@react-three/fiber'
 import { suspend } from 'suspend-react'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-type Props = JSX.IntrinsicElements['mesh'] & {
+export type TextProps = Omit<ThreeElements['mesh'], 'ref'> & {
   children: React.ReactNode
   characters?: string
   color?: ReactThreeFiber.Color
@@ -41,7 +41,7 @@ type Props = JSX.IntrinsicElements['mesh'] & {
   onSync?: (troika: any) => void
 }
 
-export const Text: ForwardRefComponent<Props, any> = /* @__PURE__ */ React.forwardRef(
+export const Text: ForwardRefComponent<TextProps, any> = /* @__PURE__ */ React.forwardRef(
   (
     {
       sdfGlyphSize = 64,
@@ -53,8 +53,8 @@ export const Text: ForwardRefComponent<Props, any> = /* @__PURE__ */ React.forwa
       characters,
       onSync,
       ...props
-    }: Props,
-    ref: React.ForwardedRef<any>
+    },
+    ref
   ) => {
     const invalidate = useThree(({ invalidate }) => invalidate)
     const [troikaMesh] = React.useState(() => new TextMeshImpl())

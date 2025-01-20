@@ -1,8 +1,9 @@
 import * as THREE from 'three'
 import * as React from 'react'
 import { ForwardRefComponent } from '../helpers/ts-utils'
+import { ThreeElements } from '@react-three/fiber'
 
-type Props = Omit<JSX.IntrinsicElements['mesh'], 'id'> & {
+export type MaskProps = Omit<ThreeElements['mesh'], 'ref' | 'id'> & {
   /** Each mask must have an id, you can have compound masks referring to the same id */
   id: number
   /** If colors of the masks own material will leak through, default: false */
@@ -11,8 +12,8 @@ type Props = Omit<JSX.IntrinsicElements['mesh'], 'id'> & {
   depthWrite?: boolean
 }
 
-export const Mask: ForwardRefComponent<Props, THREE.Mesh> = /* @__PURE__ */ React.forwardRef(
-  ({ id = 1, colorWrite = false, depthWrite = false, ...props }: Props, fref: React.ForwardedRef<THREE.Mesh>) => {
+export const Mask: ForwardRefComponent<MaskProps, THREE.Mesh> = /* @__PURE__ */ React.forwardRef(
+  ({ id = 1, colorWrite = false, depthWrite = false, ...props }: MaskProps, fref: React.ForwardedRef<THREE.Mesh>) => {
     const ref = React.useRef<THREE.Mesh>(null!)
     const spread = React.useMemo(
       () => ({

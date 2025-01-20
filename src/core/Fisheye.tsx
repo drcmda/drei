@@ -5,10 +5,10 @@
 
 import * as THREE from 'three'
 import * as React from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { RenderCubeTexture, RenderCubeTextureApi } from './RenderCubeTexture'
 
-export type FisheyeProps = JSX.IntrinsicElements['mesh'] & {
+export type FisheyeProps = ThreeElements['mesh'] & {
   /** Zoom factor, 0..1, 0 */
   zoom?: number
   /** Number of segments, 64 */
@@ -94,7 +94,7 @@ export function Fisheye({
   )
 }
 
-function UpdateCubeCamera({ api }: { api: React.MutableRefObject<RenderCubeTextureApi> }) {
+function UpdateCubeCamera({ api }: { api: React.RefObject<RenderCubeTextureApi> }) {
   const t = new THREE.Vector3()
   const r = new THREE.Quaternion()
   const s = new THREE.Vector3()

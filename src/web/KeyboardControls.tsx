@@ -34,7 +34,7 @@ export type KeyboardControlsEntry<T extends string = string> = {
   up?: boolean
 }
 
-type KeyboardControlsProps = {
+export type KeyboardControlsProps = {
   /** A map of named keys */
   map: KeyboardControlsEntry[]
   /** All children will be able to useKeyboardControls */

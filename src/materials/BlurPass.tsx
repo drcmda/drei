@@ -55,7 +55,6 @@ export class BlurPass {
     this.convolutionMaterial.setTexelSize(1.0 / width, 1.0 / height)
     this.convolutionMaterial.setResolution(new Vector2(width, height))
     this.scene = new Scene()
-    // @ts-expect-error fixed in r154
     this.camera = new Camera()
     this.convolutionMaterial.uniforms.minDepthThreshold.value = minDepthThreshold
     this.convolutionMaterial.uniforms.maxDepthThreshold.value = maxDepthThreshold

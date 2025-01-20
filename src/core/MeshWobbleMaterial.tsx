@@ -1,26 +1,7 @@
 import * as React from 'react'
 import { IUniform, MeshStandardMaterial, MeshStandardMaterialParameters } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
-
-type WobbleMaterialType = JSX.IntrinsicElements['meshStandardMaterial'] & {
-  time?: number
-  factor?: number
-  speed?: number
-}
-
-type Props = WobbleMaterialType & {
-  speed?: number
-  factor?: number
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      wobbleMaterialImpl: WobbleMaterialType
-    }
-  }
-}
 
 interface Uniform<T> {
   value: T
@@ -75,10 +56,24 @@ class WobbleMaterialImpl extends MeshStandardMaterial {
   }
 }
 
-export const MeshWobbleMaterial: ForwardRefComponent<Props, WobbleMaterialImpl> = /* @__PURE__ */ React.forwardRef(
-  ({ speed = 1, ...props }: Props, ref) => {
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    wobbleMaterialImpl: ThreeElements['meshStandardMaterial'] & {
+      time?: number
+      factor?: number
+      speed?: number
+    }
+  }
+}
+
+export type WobbleMaterialProps = Omit<ThreeElements['meshStandardMaterial'], 'ref'> & {
+  speed?: number
+  factor?: number
+}
+
+export const MeshWobbleMaterial: ForwardRefComponent<WobbleMaterialProps, WobbleMaterialImpl> =
+  /* @__PURE__ */ React.forwardRef(({ speed = 1, ...props }, ref) => {
     const [material] = React.useState(() => new WobbleMaterialImpl())
     useFrame((state) => material && (material.time = state.clock.getElapsedTime() * speed))
     return <primitive object={material} ref={ref} attach="material" {...props} />
-  }
-)
+  })

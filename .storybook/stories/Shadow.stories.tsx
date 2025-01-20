@@ -21,8 +21,8 @@ export default {
 type Story = StoryObj<typeof Shadow>
 
 function ShadowScene(props: React.ComponentProps<typeof Shadow>) {
-  const shadow = React.useRef<React.ElementRef<typeof Shadow>>(null!)
-  const mesh = React.useRef<React.ElementRef<typeof Icosahedron>>(null!)
+  const shadow = React.useRef<React.ComponentRef<typeof Shadow>>(null!)
+  const mesh = React.useRef<React.ComponentRef<typeof Icosahedron>>(null!)
 
   useFrame(({ clock }) => {
     shadow.current.scale.x = Math.sin(clock.getElapsedTime()) + 3

@@ -1,10 +1,13 @@
+// TODO: ESLint thinks Caustics is executed in a loop.
+/* eslint-disable react-hooks/rules-of-hooks */
+
 /** Author: @N8Programs https://github.com/N8python
  *    https://github.com/N8python/caustics
  */
 
 import * as THREE from 'three'
 import * as React from 'react'
-import { extend, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber'
+import { extend, ReactThreeFiber, ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { useFBO } from './Fbo'
 import { useHelper } from './Helper'
 import { shaderMaterial } from './shaderMaterial'
@@ -41,7 +44,7 @@ type CausticsProjectionMaterialType = THREE.MeshNormalMaterial & {
   lightViewMatrix?: THREE.Matrix4
 }
 
-type CausticsProps = JSX.IntrinsicElements['group'] & {
+export type CausticsProps = Omit<ThreeElements['group'], 'ref'> & {
   /** How many frames it will render, set it to Infinity for runtime, default: 1 */
   frames?: number
   /** Enables visual cues to help you stage your scene, default: false */
@@ -63,20 +66,18 @@ type CausticsProps = JSX.IntrinsicElements['group'] & {
   /** Buffer resolution, default: 2048 */
   resolution?: number
   /** Camera position, it will point towards the contents bounds center, default: [5, 5, 5] */
-  lightSource?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>
+  lightSource?: [x: number, y: number, z: number] | React.RefObject<THREE.Object3D>
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      causticsProjectionMaterial: ReactThreeFiber.MeshNormalMaterialProps & {
-        viewMatrix?: { value: THREE.Matrix4 }
-        color?: ReactThreeFiber.Color
-        causticsTexture?: THREE.Texture
-        causticsTextureB?: THREE.Texture
-        lightProjMatrix?: THREE.Matrix4
-        lightViewMatrix?: THREE.Matrix4
-      }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    causticsProjectionMaterial: ThreeElements['meshNormalMaterial'] & {
+      viewMatrix?: { value: THREE.Matrix4 }
+      color?: ReactThreeFiber.Color
+      causticsTexture?: THREE.Texture
+      causticsTextureB?: THREE.Texture
+      lightProjMatrix?: THREE.Matrix4
+      lightViewMatrix?: THREE.Matrix4
     }
   }
 }

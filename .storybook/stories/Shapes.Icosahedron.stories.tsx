@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Icosahedron>
 
 function IcosahedronScene(props: React.ComponentProps<typeof Icosahedron>) {
-  const ref = useTurntable<React.ElementRef<typeof Icosahedron>>()
+  const ref = useTurntable<React.ComponentRef<typeof Icosahedron>>()
 
   return (
     <Icosahedron ref={ref} {...props}>

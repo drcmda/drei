@@ -31,7 +31,7 @@ function HTMLScene({
   color?: React.ComponentProps<'meshBasicMaterial'>['color']
   children?: React.ReactNode
 } & HtmlProps) {
-  const ref = useTurntable<React.ElementRef<'group'>>()
+  const ref = useTurntable<React.ComponentRef<'group'>>()
 
   return (
     <group ref={ref}>
@@ -164,8 +164,8 @@ export const HTMLCalculatePositionSt = {
 //
 
 function HTMLOccluderScene(props: HtmlProps) {
-  const turntableRef = useTurntable<React.ElementRef<'group'>>()
-  const occluderRef = React.useRef<React.ElementRef<typeof Icosahedron>>(null)
+  const turntableRef = useTurntable<React.ComponentRef<'group'>>()
+  const occluderRef = React.useRef<React.ComponentRef<typeof Icosahedron>>(null)
 
   return (
     <>

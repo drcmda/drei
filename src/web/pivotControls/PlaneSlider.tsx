@@ -54,8 +54,7 @@ export const PlaneSlider: React.FC<{ dir1: THREE.Vector3; dir2: THREE.Vector3; a
     userData,
   } = React.useContext(context)
 
-  // @ts-expect-error new in @react-three/fiber@7.0.5
-  const camControls = useThree((state) => state.controls) as { enabled: boolean }
+  const camControls = useThree((state) => state.controls) as unknown as { enabled: boolean } | undefined
   const divRef = React.useRef<HTMLDivElement>(null!)
   const objRef = React.useRef<THREE.Group>(null!)
   const clickInfo = React.useRef<{

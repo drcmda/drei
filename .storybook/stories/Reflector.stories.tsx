@@ -42,7 +42,7 @@ function ReflectorScene({
   const roughnessMap = useTexture('roughness_floor.jpeg')
   const normalMap = useTexture('NORM.jpg')
   const distortionMap = useTexture('dist_map.jpeg')
-  const $box = React.useRef<React.ElementRef<typeof TorusKnot>>(null!)
+  const $box = React.useRef<React.ComponentRef<typeof TorusKnot>>(null!)
 
   React.useEffect(() => {
     distortionMap.wrapS = distortionMap.wrapT = RepeatWrapping

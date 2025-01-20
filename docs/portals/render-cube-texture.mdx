@@ -6,7 +6,7 @@ sourcecode: src/core/RenderCubeTexture.tsx
 This component allows you to render a live scene into a cubetexture which you can then apply to a material, for instance as an environment map (via the envMap property). The contents of it run inside a portal and are separate from the rest of the canvas, therefore you can have events in there, environment maps, etc.
 
 ```tsx
-export type RenderCubeTextureProps = Omit<JSX.IntrinsicElements['texture'], 'rotation'> & {
+export type RenderCubeTextureProps = Omit<ThreeElements['texture'], 'rotation'> & {
   /** Optional stencil buffer, defaults to false */
   stencilBuffer?: boolean
   /** Optional depth buffer, defaults to true */

@@ -1,28 +1,9 @@
 import * as React from 'react'
 import { IUniform, MeshPhysicalMaterial, MeshPhysicalMaterialParameters } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 // @ts-ignore
 import distort from '../helpers/glsl/distort.vert.glsl'
 import { ForwardRefComponent } from '../helpers/ts-utils'
-
-type DistortMaterialType = JSX.IntrinsicElements['meshPhysicalMaterial'] & {
-  time?: number
-  distort?: number
-  radius?: number
-}
-
-type Props = DistortMaterialType & {
-  speed?: number
-  factor?: number
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      distortMaterialImpl: DistortMaterialType
-    }
-  }
-}
 
 interface Uniform<T> {
   value: T
@@ -89,10 +70,24 @@ class DistortMaterialImpl extends MeshPhysicalMaterial {
   }
 }
 
-export const MeshDistortMaterial: ForwardRefComponent<Props, DistortMaterialImpl> = /* @__PURE__ */ React.forwardRef(
-  ({ speed = 1, ...props }: Props, ref) => {
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    distortMaterialImpl: ThreeElements['meshPhysicalMaterial'] & {
+      time?: number
+      distort?: number
+      radius?: number
+    }
+  }
+}
+
+export type MeshDistortMaterialProps = Omit<ThreeElements['distortMaterialImpl'], 'ref'> & {
+  speed?: number
+  factor?: number
+}
+
+export const MeshDistortMaterial: ForwardRefComponent<MeshDistortMaterialProps, DistortMaterialImpl> =
+  /* @__PURE__ */ React.forwardRef(({ speed = 1, ...props }, ref) => {
     const [material] = React.useState(() => new DistortMaterialImpl())
     useFrame((state) => material && (material.time = state.clock.getElapsedTime() * speed))
     return <primitive object={material} ref={ref} attach="material" {...props} />
-  }
-)
+  })

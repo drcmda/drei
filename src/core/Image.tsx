@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as THREE from 'three'
-import { Color, extend, useThree } from '@react-three/fiber'
+import { Color, extend, ThreeElements, useThree } from '@react-three/fiber'
 import { shaderMaterial } from './shaderMaterial'
 import { useTexture } from './Texture'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 import { version } from '../helpers/constants'
 
-export type ImageProps = Omit<JSX.IntrinsicElements['mesh'], 'scale'> & {
+export type ImageProps = Omit<ThreeElements['mesh'], 'scale'> & {
   segments?: number
   scale?: number | [number, number]
   color?: Color
@@ -19,7 +19,7 @@ export type ImageProps = Omit<JSX.IntrinsicElements['mesh'], 'scale'> & {
   side?: THREE.Side
 } & ({ texture: THREE.Texture; url?: never } | { texture?: never; url: string }) // {texture: THREE.Texture} XOR {url: string}
 
-type ImageMaterialType = JSX.IntrinsicElements['shaderMaterial'] & {
+type ImageMaterialType = ThreeElements['shaderMaterial'] & {
   scale?: number[]
   imageBounds?: number[]
   radius?: number
@@ -30,11 +30,9 @@ type ImageMaterialType = JSX.IntrinsicElements['shaderMaterial'] & {
   grayscale?: number
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      imageMaterial: ImageMaterialType
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    imageMaterial: ImageMaterialType
   }
 }
 

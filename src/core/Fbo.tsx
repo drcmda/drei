@@ -1,10 +1,6 @@
 import * as React from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
-import { TextureEncoding } from '../helpers/deprecated'
-
-// TODO: consume this from three >r154 when SemVer allows
-type ColorSpace = 'srgb' | 'srgb-linear' | '' | string
 
 type FBOSettings = {
   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default: 0 */
@@ -24,8 +20,7 @@ type FBOSettings = {
   stencilBuffer?: boolean | undefined // false;
   generateMipmaps?: boolean | undefined // true;
   depthTexture?: THREE.DepthTexture | undefined
-  encoding?: TextureEncoding | undefined
-  colorSpace?: ColorSpace | undefined
+  colorSpace?: THREE.ColorSpace | undefined
 }
 
 // 👇 uncomment when TS version supports function overloads

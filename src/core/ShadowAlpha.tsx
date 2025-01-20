@@ -12,7 +12,7 @@ import { useFrame } from '@react-three/fiber'
 import * as React from 'react'
 import * as THREE from 'three'
 
-interface ShadowAlphaProps {
+export interface ShadowAlphaProps {
   opacity?: number
   alphaMap?: THREE.Texture | boolean
 }
@@ -96,7 +96,7 @@ export function ShadowAlpha({ opacity, alphaMap }: ShadowAlphaProps) {
   }, [])
 
   useFrame(() => {
-    const parent = (depthMaterialRef.current as any).__r3f?.parent
+    const parent = (depthMaterialRef.current as any).__r3f?.parent?.object
     if (parent) {
       const parentMainMaterial = parent.material
       if (parentMainMaterial) {

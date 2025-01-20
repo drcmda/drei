@@ -8,7 +8,7 @@ import { useTurntable } from '../useTurntable'
 import { meshBounds } from '../../src'
 
 function MeshBounds(props: React.ComponentProps<'mesh'>) {
-  const mesh = useTurntable<React.ElementRef<'mesh'>>()
+  const mesh = useTurntable<React.ComponentRef<'mesh'>>()
 
   const [hovered, setHover] = React.useState(false)
 

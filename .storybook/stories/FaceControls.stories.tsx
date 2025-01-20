@@ -7,7 +7,7 @@ import * as easing from 'maath/easing'
 import { Setup } from '../Setup'
 
 import { FaceLandmarker, FaceControls, Box, WebcamVideoTexture } from '../../src'
-import { ComponentProps, ElementRef, useRef, useState } from 'react'
+import { ComponentProps, ComponentRef, useRef, useState } from 'react'
 import { FaceLandmarkerResult } from '@mediapipe/tasks-vision'
 import { useFrame, useThree } from '@react-three/fiber'
 
@@ -55,8 +55,8 @@ export const FaceControlsSt = {
 //
 
 function FaceControlsScene2(props: ComponentProps<typeof FaceControls>) {
-  const faceLandmarkerRef = useRef<ElementRef<typeof FaceLandmarker>>(null)
-  const videoTextureRef = useRef<ElementRef<typeof WebcamVideoTexture>>(null)
+  const faceLandmarkerRef = useRef<ComponentRef<typeof FaceLandmarker>>(null)
+  const videoTextureRef = useRef<ComponentRef<typeof WebcamVideoTexture>>(null)
 
   const [faceLandmarkerResult, setFaceLandmarkerResult] = useState<FaceLandmarkerResult>()
 
@@ -99,7 +99,7 @@ export const FaceControlsSt2 = {
 //
 
 function FaceControlsScene3(props: ComponentProps<typeof FaceControls>) {
-  const faceControlsRef = useRef<ElementRef<typeof FaceControls>>(null)
+  const faceControlsRef = useRef<ComponentRef<typeof FaceControls>>(null)
 
   const camera = useThree((state) => state.camera)
   const [current] = useState(() => new THREE.Object3D())

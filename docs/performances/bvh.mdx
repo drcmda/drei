@@ -30,7 +30,7 @@ export interface BVHOptions {
 }
 
 export type BvhProps = BVHOptions &
-  JSX.IntrinsicElements['group'] & {
+  ThreeElements['group'] & {
     /**Enabled, default: true */
     enabled?: boolean
     /** Use .raycastFirst to retrieve hits which is generally faster, default: false */

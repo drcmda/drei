@@ -22,7 +22,7 @@ export default {
 type Story = StoryObj<typeof Extrude>
 
 function ExtrudeScene(props: React.ComponentProps<typeof Extrude>) {
-  const ref = useTurntable<React.ElementRef<typeof Extrude>>()
+  const ref = useTurntable<React.ComponentRef<typeof Extrude>>()
 
   return (
     <>

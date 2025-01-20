@@ -4,7 +4,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { Setup } from '../Setup'
 
 import { Sampler, ComputedAttribute, TransformFn } from '../../src'
-import { BufferAttribute, Vector3 } from 'three'
+import { BufferAttribute, InstancedMesh, Mesh, Vector3 } from 'three'
 
 export default {
   title: 'Misc/Sampler',
@@ -49,8 +49,8 @@ export const SamplerSt = {
 //
 
 function RefAPIScene(props: React.ComponentProps<typeof Sampler>) {
-  const meshRef = React.useRef(null)
-  const instancesRef = React.useRef(null)
+  const meshRef = React.useRef<Mesh>(null!)
+  const instancesRef = React.useRef<InstancedMesh>(null!)
 
   return (
     <>

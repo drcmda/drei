@@ -230,20 +230,3 @@ export class MeshReflectorMaterial extends MeshStandardMaterial {
     this._mixContrast.value = v
   }
 }
-
-export type MeshReflectorMaterialProps = {
-  mixBlur: number
-  mixStrength: number
-  mirror: number
-  textureMatrix: Matrix4
-  tDiffuse: Texture
-  distortionMap?: Texture
-  tDiffuseBlur: Texture
-  hasBlur: boolean
-  minDepthThreshold: number
-  maxDepthThreshold: number
-  depthScale: number
-  depthToBlurRatioBias: number
-  distortion: number
-  mixContrast: number
-} & JSX.IntrinsicElements['meshStandardMaterial']

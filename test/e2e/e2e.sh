@@ -39,7 +39,7 @@ appdir="$tmp/$appname"
 (cd $tmp; npm create -y vite@latest $appname -- --template react-ts)
 
 # drei
-(cd $appdir; npm i; npm i $TGZ)
+(cd $appdir; npm i @types/react@latest @types/react-dom@latest react@latest react-dom@latest @react-three/fiber@rc $TGZ)
 
 # App.tsx
 cp App.tsx $appdir/src/App.tsx
@@ -62,7 +62,7 @@ appname=nextapp
 appdir="$tmp/$appname"
 
 # create app
-(cd $tmp; npx -y create-next-app@14 $appname --ts --no-eslint --no-tailwind --no-src-dir --app --import-alias "@/*")
+(cd $tmp; npx -y create-next-app@latest $appname --ts --no-eslint --no-tailwind --no-src-dir --app --import-alias "@/*")
 
 # drei
 (cd $appdir; npm i $TGZ)
@@ -89,7 +89,7 @@ appname=cjsapp
 appdir="$tmp/$appname"
 
 # create app
-(cd $tmp; npx -y create-next-app@14 $appname --ts --no-eslint --no-tailwind --no-src-dir --app --import-alias "@/*")
+(cd $tmp; npx -y create-next-app@latest $appname --ts --no-eslint --no-tailwind --no-src-dir --app --import-alias "@/*")
 
 # drei
 (cd $appdir; npm i $TGZ)

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useFrame, useThree, createPortal } from '@react-three/fiber'
+import { useFrame, useThree, createPortal, ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Meta, StoryObj } from '@storybook/react'
 
@@ -22,8 +22,8 @@ export default {
 type Story = StoryObj<typeof UseCameraScene>
 
 function UseCameraScene() {
-  const virtualCam = React.useRef<React.ElementRef<typeof OrthographicCamera>>(null!)
-  const ref = React.useRef<React.ElementRef<'mesh'>>(null)
+  const virtualCam = React.useRef<THREE.OrthographicCamera>(null!)
+  const ref = React.useRef<THREE.Mesh>(null)
 
   const [hover, setHover] = React.useState<null | number>(null)
 
@@ -51,7 +51,7 @@ function UseCameraScene() {
   }, 1)
 
   const handlePointerOut = () => setHover(null)
-  const handlePointerMove = (e: THREE.Event) => setHover(Math.floor(e.faceIndex ?? 0 / 2))
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => setHover(Math.floor(e.faceIndex ?? 0 / 2))
   return createPortal(
     <>
       <OrthographicCamera ref={virtualCam} makeDefault={false} position={[0, 0, 100]} zoom={2} />

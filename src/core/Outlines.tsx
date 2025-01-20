@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import * as React from 'react'
 import { shaderMaterial } from './shaderMaterial'
-import { extend, applyProps, ReactThreeFiber, useThree } from '@react-three/fiber'
+import { extend, applyProps, ReactThreeFiber, useThree, ThreeElements } from '@react-three/fiber'
 import { toCreasedNormals } from 'three-stdlib'
 import { version } from '../helpers/constants'
 
@@ -61,7 +61,7 @@ const OutlinesMaterial = /* @__PURE__ */ shaderMaterial(
    }`
 )
 
-type OutlinesProps = JSX.IntrinsicElements['group'] & {
+export type OutlinesProps = Omit<ThreeElements['group'], 'ref'> & {
   /** Outline color, default: black */
   color?: ReactThreeFiber.Color
   /** Line thickness is independent of zoom, default: false */
@@ -95,14 +95,14 @@ export function Outlines({
   clippingPlanes,
   ...props
 }: OutlinesProps) {
-  const ref = React.useRef<THREE.Group>()
+  const ref = React.useRef<THREE.Group>(null)
   const [material] = React.useState(() => new OutlinesMaterial({ side: THREE.BackSide }))
   const { gl } = useThree()
   const contextSize = gl.getDrawingBufferSize(new THREE.Vector2())
   React.useMemo(() => extend({ OutlinesMaterial }), [])
 
   const oldAngle = React.useRef(0)
-  const oldGeometry = React.useRef<THREE.BufferGeometry>()
+  const oldGeometry = React.useRef<THREE.BufferGeometry>(null)
   React.useLayoutEffect(() => {
     const group = ref.current
     if (!group) return
@@ -150,11 +150,11 @@ export function Outlines({
       mesh.renderOrder = renderOrder
 
       const parent = group.parent as THREE.Mesh & THREE.SkinnedMesh & THREE.InstancedMesh
-      applyProps(mesh as any, {
+      applyProps(mesh, {
         morphTargetInfluences: parent.morphTargetInfluences,
         morphTargetDictionary: parent.morphTargetDictionary,
       })
-      applyProps(mesh.material as any, {
+      applyProps(mesh.material, {
         transparent,
         thickness,
         color,
@@ -184,5 +184,5 @@ export function Outlines({
     }
   }, [])
 
-  return <group ref={ref as React.Ref<THREE.Group>} {...props} />
+  return <group ref={ref} {...props} />
 }

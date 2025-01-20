@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Ring>
 
 function RingScene(props: React.ComponentProps<typeof Ring>) {
-  const ref = useTurntable<React.ElementRef<typeof Ring>>()
+  const ref = useTurntable<React.ComponentRef<typeof Ring>>()
 
   return (
     <Ring ref={ref} {...props}>

@@ -50,7 +50,7 @@ const CustomCamera = (props: OrbitControlsProps) => {
    * we will render our scene in a render target and use it as a map.
    */
   const fbo = useFBO(400, 400)
-  const virtualCamera = useRef<React.ElementRef<typeof PerspectiveCamera> | null>(null)
+  const virtualCamera = useRef<React.ComponentRef<typeof PerspectiveCamera> | null>(null)
   const [virtualScene] = useState(() => new Scene())
 
   useFrame(({ gl }) => {

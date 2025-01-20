@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Tetrahedron>
 
 function TetrahedronScene(props: React.ComponentProps<typeof Tetrahedron>) {
-  const ref = useTurntable<React.ElementRef<typeof Tetrahedron>>()
+  const ref = useTurntable<React.ComponentRef<typeof Tetrahedron>>()
 
   return (
     <Tetrahedron ref={ref} {...props}>

@@ -45,7 +45,7 @@ export const MeshWobbleMaterialSt = {
 //
 
 function MeshWobbleMaterialRefScene(props: React.ComponentProps<typeof MeshWobbleMaterial>) {
-  const material = React.useRef<React.ElementRef<typeof MeshWobbleMaterial>>(null)
+  const material = React.useRef<React.ComponentRef<typeof MeshWobbleMaterial>>(null)
 
   useFrame(({ clock }) => {
     if (material.current === null) return

@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Polyhedron>
 
 function PolyhedronScene(props: React.ComponentProps<typeof Polyhedron>) {
-  const ref = useTurntable<React.ElementRef<typeof Polyhedron>>()
+  const ref = useTurntable<React.ComponentRef<typeof Polyhedron>>()
 
   return (
     <Polyhedron ref={ref} {...props}>

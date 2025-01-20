@@ -5,9 +5,9 @@ import { applyProps } from '@react-three/fiber'
 import { DecalGeometry } from 'three-stdlib'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type DecalProps = Omit<JSX.IntrinsicElements['mesh'], 'children'> & {
+export type DecalProps = Omit<FIBER.ThreeElements['mesh'], 'ref' | 'children'> & {
   debug?: boolean
-  mesh?: React.MutableRefObject<THREE.Mesh>
+  mesh?: React.RefObject<THREE.Mesh>
   position?: FIBER.Vector3
   /** FIBER.Euler for manual orientation or a single float for closest-vertex-normal orient */
   rotation?: FIBER.Euler | number

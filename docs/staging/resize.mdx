@@ -14,7 +14,7 @@ sourcecode: src/core/Resize.tsx
 Calculates a boundary box and scales its children so the highest dimension is constrained by 1. NB: proportions are preserved.
 
 ```tsx
-export type ResizeProps = JSX.IntrinsicElements['group'] & {
+export type ResizeProps = ThreeElements['group'] & {
   /** constrained by width dimension (x axis), undefined */
   width?: boolean
   /** constrained by height dimension (y axis), undefined */

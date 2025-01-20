@@ -8,54 +8,49 @@ import { Box, shaderMaterial, useTexture } from '../../src'
 
 const MyMaterial = shaderMaterial(
   { map: new Texture(), repeats: 1 },
+  /* glsl */ `
+    varying vec2 vUv;
+
+    void main()	{
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1);
+    }
+  `,
+  /* glsl */ `
+    varying vec2 vUv;
+    uniform float repeats;
+    uniform sampler2D map;
+
+    float random (vec2 st) {
+      return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+    }
+
+    void main(){
+      vec2 uv = vUv;
+
+      uv *= repeats;
+      uv = fract(uv);
+
+      vec3 color = vec3(
+        texture2D(map, uv).r,
+        texture2D(map, uv + vec2(0.01, 0.01)).g,
+        texture2D(map, uv - vec2(0.01, 0.01)).b
+      );
+
+      gl_FragColor = vec4(color, 1.0);
+
+      #include <tonemapping_fragment>
+      #include <encodings_fragment>
+    }
   `
-varying vec2 vUv;
-
-void main()	{
-  vUv = uv;
-  
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
-}
-`,
-  `
-varying vec2 vUv;
-uniform float repeats;
-uniform sampler2D map;
-
-float random (vec2 st) {
-  return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
-}
-
-void main(){
-  vec2 uv = vUv;
-
-  uv *= repeats;
-  uv = fract(uv);
-
-  vec3 color = vec3(
-    texture2D(map, uv).r,
-    texture2D(map, uv + vec2(0.01,0.01)).g,
-    texture2D(map, uv - vec2(0.01,0.01)).b
-  );
-  
-  gl_FragColor = vec4(color,1.0);
-
-  #include <tonemapping_fragment>
-  #include <encodings_fragment>
-}
-`
 )
 extend({ MyMaterial })
 
-type MyMaterialImpl = {
-  repeats: number
-  map: Texture | Texture[]
-} & JSX.IntrinsicElements['shaderMaterial']
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      myMaterial: MyMaterialImpl
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    myMaterial: ThreeElements['shaderMaterial'] & {
+      repeats: number
+      map: Texture | Texture[]
     }
   }
 }

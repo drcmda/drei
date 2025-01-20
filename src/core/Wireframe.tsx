@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as THREE from 'three'
-import { MaterialNode, extend } from '@react-three/fiber'
+import { extend, ThreeElement } from '@react-three/fiber'
 import {
   WireframeMaterial,
   WireframeMaterialProps,
@@ -9,11 +9,9 @@ import {
   useWireframeUniforms,
 } from '../materials/WireframeMaterial'
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      meshWireframeMaterial: MaterialNode<THREE.ShaderMaterial, WireframeMaterialProps>
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    meshWireframeMaterial: ThreeElement<typeof WireframeMaterial>
   }
 }
 

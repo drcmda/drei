@@ -4,7 +4,7 @@ import { Sky as SkyImpl } from 'three-stdlib'
 import { Vector3 } from 'three'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-type Props = {
+export type SkyProps = {
   distance?: number
   sunPosition?: ReactThreeFiber.Vector3
   inclination?: number
@@ -26,7 +26,7 @@ export function calcPosFromAngles(inclination: number, azimuth: number, vector: 
   return vector
 }
 
-export const Sky: ForwardRefComponent<Props, SkyImpl> = /* @__PURE__ */ React.forwardRef(
+export const Sky: ForwardRefComponent<SkyProps, SkyImpl> = /* @__PURE__ */ React.forwardRef(
   (
     {
       inclination = 0.6,
@@ -38,7 +38,7 @@ export const Sky: ForwardRefComponent<Props, SkyImpl> = /* @__PURE__ */ React.fo
       turbidity = 10,
       sunPosition = calcPosFromAngles(inclination, azimuth),
       ...props
-    }: Props,
+    }: SkyProps,
     ref
   ) => {
     const scale = React.useMemo(() => new Vector3().setScalar(distance), [distance])

@@ -8,13 +8,6 @@ type RenderHudProps = {
   renderPriority?: number
 }
 
-type HudProps = {
-  /** Any React node */
-  children: React.ReactNode
-  /** Render priority, default: 1 */
-  renderPriority?: number
-}
-
 function RenderHud({ defaultScene, defaultCamera, renderPriority = 1 }: RenderHudProps) {
   const { gl, scene, camera } = useThree()
   let oldCLear
@@ -34,6 +27,13 @@ function RenderHud({ defaultScene, defaultCamera, renderPriority = 1 }: RenderHu
   }, renderPriority)
   // Without an element that receives pointer events state.pointer will always be 0/0
   return <group onPointerOver={() => null} />
+}
+
+export type HudProps = {
+  /** Any React node */
+  children: React.ReactNode
+  /** Render priority, default: 1 */
+  renderPriority?: number
 }
 
 export function Hud({ children, renderPriority = 1 }: HudProps) {

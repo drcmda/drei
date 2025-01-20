@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { LOD, Object3D } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-type Props = JSX.IntrinsicElements['lOD'] & {
+export type DetailedProps = Omit<ThreeElements['lOD'], 'ref'> & {
   children: React.ReactElement<Object3D>[]
   hysteresis?: number
   distances: number[]
 }
 
-export const Detailed: ForwardRefComponent<Props, LOD> = /* @__PURE__ */ React.forwardRef(
-  ({ children, hysteresis = 0, distances, ...props }: Props, ref) => {
+export const Detailed: ForwardRefComponent<DetailedProps, LOD> = /* @__PURE__ */ React.forwardRef(
+  ({ children, hysteresis = 0, distances, ...props }, ref) => {
     const lodRef = React.useRef<LOD>(null!)
     React.useImperativeHandle(ref, () => lodRef.current, [])
     React.useLayoutEffect(() => {

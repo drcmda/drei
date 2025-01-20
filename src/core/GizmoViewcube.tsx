@@ -117,7 +117,7 @@ const FaceCube = (props: GenericProps) => {
   )
 }
 
-const EdgeCube = ({ onClick, dimensions, position, hoverColor = colors.hover }: EdgeCubeProps): JSX.Element => {
+const EdgeCube = ({ onClick, dimensions, position, hoverColor = colors.hover }: EdgeCubeProps): React.JSX.Element => {
   const { tweenCamera } = useGizmoContext()
   const [hover, setHover] = React.useState<boolean>(false)
   const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
