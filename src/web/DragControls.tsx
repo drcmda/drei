@@ -38,6 +38,7 @@ export type DragControlsProps = {
   onDragEnd?: () => void
   children: React.ReactNode
   dragConfig?: DragConfig
+  preventOverlap?: boolean /** If preventOverlap is true, other overlapping DragControls will not be draggable */
 }
 
 export const DragControls: ForwardRefComponent<DragControlsProps, THREE.Group> = React.forwardRef<
@@ -78,8 +79,13 @@ export const DragControls: ForwardRefComponent<DragControlsProps, THREE.Group> =
           onDragStart && onDragStart(initialModelPosition)
           invalidate()
         },
-        onDrag: ({ xy: [dragX, dragY], intentional }) => {
+        onDrag: ({ xy: [dragX, dragY], intentional, event }) => {
           if (!intentional) return
+
+          if(props.preventOverlap === true){
+            event.stopPropagation();
+          }
+
           const normalizedMouseX = ((dragX - size.left) / size.width) * 2 - 1
           const normalizedMouseY = -((dragY - size.top) / size.height) * 2 + 1
 
