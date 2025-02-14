@@ -50,3 +50,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: pkg-size/action@v1
+        with:
+          build-command: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

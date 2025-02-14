@@ -2878,6 +2878,7 @@ __metadata:
     json: "npm:^11.0.0"
     maath: "npm:^0.10.8"
     meshline: "npm:^3.3.1"
+    pkg-size: "npm:^2.4.0"
     prettier: "npm:^3.3.3"
     pretty-quick: "npm:^4.0.0"
     react: "npm:^18.0.0"
@@ -10286,6 +10287,15 @@ __metadata:
   dependencies:
     find-up: "npm:^6.3.0"
   checksum: 10c0/1afb23d2efb1ec9d8b2c4a0c37bf146822ad2774f074cb05b853be5dca1b40815c5960dd126df30ab8908349262a266f31b771e877235870a3b8fd313beebec5
+  languageName: node
+  linkType: hard
+
+"pkg-size@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "pkg-size@npm:2.4.0"
+  bin:
+    pkg-size: bin/cli.js
+  checksum: 10c0/57656b9e45564ecfc232163cf17bbca4e96549c4ee02d39daa91cee1fcd2aea8ae717c24616561037f5cdc39314e6e0b32a34f3d502a75d9f25dce7ec0e44c1e
   languageName: node
   linkType: hard
 
