@@ -186,6 +186,11 @@ export const Instances: ForwardRefComponent<InstancesProps, THREE.InstancedMesh>
       }
       iterations++
     }
+
+    if (frames === Infinity || iterations === frames) {
+      if (parentRef.current.boundingBox) parentRef.current.computeBoundingBox()
+      if (parentRef.current.boundingSphere) parentRef.current.computeBoundingSphere()
+    }
   })
 
   const api = React.useMemo(
