@@ -1,24 +1,40 @@
+/* eslint react-hooks/exhaustive-deps: 1 */
 import * as React from 'react'
 import { Object3D } from 'three'
 import { useThree, useFrame } from '@react-three/fiber'
 import { Falsey } from 'utility-types'
 
-type HelperType = Object3D & { update: () => void; dispose: () => void }
-type HelperConstructor = new (...args: any[]) => any
-type HelperArgs<T> = T extends [infer _, ...infer R] ? R : never
+type HelperConstructor = new (...args: any[]) => Object3D & { update: () => void; dispose?: () => void }
+type HelperArgs<T> = T extends [any, ...infer R] ? R : never
 
-export function useHelper<T extends HelperConstructor>(
-  object3D: React.MutableRefObject<Object3D> | Falsey,
-  helperConstructor: T,
-  ...args: HelperArgs<ConstructorParameters<T>>
+/**
+ * Instantiate a `THREE.*Helper` for an existing node and add it to the scene.
+ *
+ * Examples:
+ *
+ * ```ts
+ * useHelper(sphereRef, BoxHelper, 'royalblue')
+ * useHelper(sphereRef, VertexNormalsHelper, 1, 0xff0000)
+
+ * useHelper(raycasterRef, RaycasterHelper, 20)
+ * ```
+ */
+export function useHelper<H extends HelperConstructor>(
+  /** A ref to the node the helper is instantiate on (type inferred from H's ctor 1st param) */
+  nodeRef: React.RefObject<ConstructorParameters<H>[0]> | Falsey,
+  /** `*Helper` class */
+  helperConstructor: H,
+  /** Rest of arguments for H (types inferred from H's ctor params, omitting first) */
+  ...args: HelperArgs<ConstructorParameters<H>>
 ) {
-  const helper = React.useRef<HelperType>()
+  const helperRef = React.useRef<InstanceType<H>>(null!)
   const scene = useThree((state) => state.scene)
-  React.useLayoutEffect(() => {
-    let currentHelper: HelperType = undefined!
 
-    if (object3D && object3D?.current && helperConstructor) {
-      helper.current = currentHelper = new (helperConstructor as any)(object3D.current, ...args)
+  React.useLayoutEffect(() => {
+    let currentHelper: InstanceType<H> = undefined!
+
+    if (nodeRef && nodeRef?.current && helperConstructor) {
+      helperRef.current = currentHelper = new helperConstructor(nodeRef.current, ...args) as InstanceType<H>
     }
 
     if (currentHelper) {
@@ -26,36 +42,43 @@ export function useHelper<T extends HelperConstructor>(
       currentHelper.traverse((child) => (child.raycast = () => null))
       scene.add(currentHelper)
       return () => {
-        helper.current = undefined
+        helperRef.current = null!
         scene.remove(currentHelper)
         currentHelper.dispose?.()
       }
     }
-  }, [scene, helperConstructor, object3D, ...args])
+  }, [scene, helperConstructor, nodeRef, args])
 
-  useFrame(() => void helper.current?.update?.())
-  return helper
+  useFrame(() => void helperRef.current?.update?.())
+  return helperRef
 }
 
 //
 
-export type HelperProps<T extends HelperConstructor> = {
-  type: T
-  args?: HelperArgs<ConstructorParameters<T>>
+export type HelperProps<H extends HelperConstructor> = {
+  /** `*Helper` class */
+  type: H
+  /** Rest of arguments for H (types inferred from H's ctor params, omitting first) */
+  args?: HelperArgs<ConstructorParameters<H>>
 }
 
-export const Helper = <T extends HelperConstructor>({
+/**
+ * Instantiate a `THREE.*Helper` for parent node and add it to the scene.
+ */
+
+export const Helper = <H extends HelperConstructor>({
   type: helperConstructor,
   args = [] as never,
-}: HelperProps<T>) => {
-  const thisRef = React.useRef<Object3D>(null!)
+}: HelperProps<H>) => {
   const parentRef = React.useRef<Object3D>(null!)
-
-  React.useLayoutEffect(() => {
-    parentRef.current = thisRef.current.parent!
-  })
 
   useHelper(parentRef, helperConstructor, ...args)
 
-  return <object3D ref={thisRef} />
+  return (
+    <object3D
+      ref={(obj) => {
+        parentRef.current = obj?.parent!
+      }}
+    />
+  )
 }

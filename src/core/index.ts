@@ -24,6 +24,7 @@ export * from './Svg'
 export * from './Gltf'
 export * from './AsciiRenderer'
 export * from './Splat'
+export * from './Raycaster'
 
 // Cameras
 export * from './OrthographicCamera'

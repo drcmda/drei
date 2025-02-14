@@ -2133,6 +2133,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gsimone/three-raycaster-helper@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@gsimone/three-raycaster-helper@npm:0.1.0"
+  peerDependencies:
+    three: ^0.139.2
+  checksum: 10c0/adefc5b44a449d0ef1540e46454b81b6ff6c267dfb1ad187a1f64da723d6dabc77158958cdd1cb0a63295ecfd9c2e5a4d08577b6821653963e334ef8e4d54b90
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -2837,6 +2846,7 @@ __metadata:
     "@eslint/compat": "npm:^1.2.3"
     "@eslint/eslintrc": "npm:^3.2.0"
     "@eslint/js": "npm:^9.15.0"
+    "@gsimone/three-raycaster-helper": "npm:^0.1.0"
     "@mediapipe/tasks-vision": "npm:0.10.17"
     "@monogrid/gainmap-js": "npm:^3.0.6"
     "@playwright/test": "npm:^1.45.2"

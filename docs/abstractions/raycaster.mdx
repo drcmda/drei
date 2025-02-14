@@ -1,0 +1,14 @@
+---
+title: Raycaster
+sourcecode: src/core/Raycaster.tsx
+---
+
+[![](https://img.shields.io/badge/-storybook-%23ff69b4)](https://drei.vercel.app/?path=/story/abstractions-raycaster)
+
+A `<raycaster>` wrapper with a `helper` prop to visualize it.
+
+```tsx
+const raycasterRef = useRef<THREE.Raycaster>(null)
+
+<Raycaster ref={raycasterRef} origin={[-4,0,0]} direction={[1,0,0]} near={1} far={8} helper={[20]} />
+```
