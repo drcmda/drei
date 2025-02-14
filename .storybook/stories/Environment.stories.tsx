@@ -146,3 +146,25 @@ export const EnvironmentSt4 = {
   },
   name: 'Gainmap',
 } satisfies Story
+
+function EnvironmentScene5(props: ComponentProps<typeof Environment>) {
+  return (
+    <>
+      <Environment {...props} />
+      <mesh>
+        <torusKnotGeometry args={[1, 0.5, 128, 32]} />
+        <meshStandardMaterial metalness={1} roughness={0} />
+      </mesh>
+      <OrbitControls autoRotate />
+    </>
+  )
+}
+
+export const EnvironmentSt5 = {
+  render: (args) => <EnvironmentScene5 {...args} />,
+  args: {
+    color: '#ff0000',
+    background: true,
+  },
+  name: 'Color',
+} satisfies Story

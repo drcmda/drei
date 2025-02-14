@@ -1,6 +1,25 @@
 import * as React from 'react'
-import { useThree, createPortal, useFrame, extend, Object3DNode, Euler, applyProps } from '@react-three/fiber'
-import { WebGLCubeRenderTarget, Texture, Scene, CubeCamera, HalfFloatType, CubeTexture } from 'three'
+import {
+  useThree,
+  createPortal,
+  useFrame,
+  extend,
+  Object3DNode,
+  Euler,
+  applyProps,
+  ReactThreeFiber,
+} from '@react-three/fiber'
+import {
+  WebGLCubeRenderTarget,
+  Texture,
+  Scene,
+  CubeCamera,
+  HalfFloatType,
+  CubeTexture,
+  Color,
+  DataTexture,
+  PMREMGenerator,
+} from 'three'
 import { GroundProjectedEnv as GroundProjectedEnvImpl } from 'three-stdlib'
 import { PresetsType } from '../helpers/environment-assets'
 import { EnvironmentLoaderProps, useEnvironment } from './useEnvironment'
@@ -21,6 +40,7 @@ export type EnvironmentProps = {
   environmentIntensity?: number
   environmentRotation?: Euler
 
+  color?: ReactThreeFiber.Color
   map?: Texture
   preset?: PresetsType
   scene?: Scene | React.MutableRefObject<Scene>
@@ -235,6 +255,47 @@ function EnvironmentGround(props: EnvironmentProps) {
   )
 }
 
+function EnvironmentColor(props: EnvironmentProps) {
+  const { scene, gl } = useThree()
+  const color = props.color
+  const background = props.background
+
+  const cubeRenderTarget = React.useMemo(() => new WebGLCubeRenderTarget(128), [gl])
+  const cubeCamera = React.useMemo(() => new CubeCamera(0.1, 100, cubeRenderTarget), [cubeRenderTarget])
+  const colorScene = React.useMemo(() => new Scene(), [])
+
+  React.useEffect(() => {
+    if (!color) return
+
+    let bgColor: Color
+    if (color instanceof Color) {
+      bgColor = color
+    } else if (Array.isArray(color)) {
+      bgColor = new Color(...color)
+    } else {
+      bgColor = new Color(color)
+    }
+
+    // Set the color scene background
+    colorScene.background = bgColor
+
+    // Render the cube map
+    cubeCamera.update(gl, colorScene)
+
+    // Apply to the main scene
+    const prevBackground = scene.background
+    if (background) scene.background = bgColor
+    if (background !== 'only') scene.environment = cubeRenderTarget.texture
+
+    return () => {
+      if (background) scene.background = prevBackground
+      if (background !== 'only') scene.environment = null
+    }
+  }, [color, scene, colorScene, cubeCamera, gl, cubeRenderTarget, background])
+
+  return null
+}
+
 export function Environment(props: EnvironmentProps) {
   return props.ground ? (
     <EnvironmentGround {...props} />
@@ -242,6 +303,8 @@ export function Environment(props: EnvironmentProps) {
     <EnvironmentMap {...props} />
   ) : props.children ? (
     <EnvironmentPortal {...props} />
+  ) : props.color ? (
+    <EnvironmentColor {...props} />
   ) : (
     <EnvironmentCube {...props} />
   )

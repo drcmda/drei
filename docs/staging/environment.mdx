@@ -36,6 +36,7 @@ Sets up a global cubemap, which affects the default `scene.environment`, and opt
   backgroundRotation={[0, Math.PI / 2, 0]} // optional rotation (default: 0, only works with three 0.163 and up)
   environmentIntensity={1} // optional intensity factor (default: 1, only works with three 0.163 and up)
   environmentRotation={[0, Math.PI / 2, 0]} // optional rotation (default: 0, only works with three 0.163 and up)
+  color={'red'} // uses a solid color and overridden by files, preset or scene
   files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
   path="/"
   preset={null}
@@ -80,6 +81,12 @@ import { suspend } from 'suspend-react'
 const city = import('@pmndrs/assets/hdri/city.exr').then((module) => module.default)
 
 <Environment files={suspend(city)} />
+```
+
+In the simplest case you a solid color can be used.
+
+```jsx
+<Environment color="red" background />
 ```
 
 If you already have a cube texture you can pass it directly:
