@@ -108,7 +108,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-storybook": "^0.11.0",
+    "eslint-plugin-storybook": "^0.11.3",
     "husky": "^9.1.7",
     "json": "^11.0.0",
     "prettier": "^3.3.3",
