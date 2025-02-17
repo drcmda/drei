@@ -1,0 +1,40 @@
+---
+title: useVariants
+sourcecode: src/core/useVariants.ts
+---
+
+[![](https://img.shields.io/badge/-storybook-%23ff69b4)](https://drei.pmnd.rs/?path=/story/abstractions-useanimations--use-animations-st)
+
+<Grid cols={4}>
+  <li>
+    <Codesandbox id="pecl6" />
+  </li>
+</Grid>
+
+A hook to interact with models that use the [KHR Material Variants](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_variants) GLTF Extension.
+
+```jsx
+const gltf = useGLTF(url)
+const { activeVariant, setVariant, variants, materials } = useVariants(gltf)
+```
+
+You can set the variant using the `setVariant` method or as an input to the hook itself.
+This makes things convienent when the switching logic happens outside the component.
+
+Using `setVariant()`
+
+```jsx
+const gltf = useGLTF('model.glb')
+const { setVariant } = useVariants(gltf)
+
+useEffect(() => {
+  setVariant(props.variant)
+}, [props.variant])
+```
+
+Using direct hook input:
+
+```jsx
+const gltf = useGLTF('model.glb')
+useVariants(gltf, props.variant)
+```
