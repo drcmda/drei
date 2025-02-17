@@ -14,25 +14,29 @@ Motion path controls, it takes a path of bezier curves or catmull-rom curves as 
 ```tsx
 type MotionPathProps = JSX.IntrinsicElements['group'] & {
   /** An optional array of THREE curves */
-  curves?: THREE.Curve<THREE.Vector3>[]
+  curves?: THREE.Curve<THREE.Vector3>[];
   /** Show debug helpers */
-  debug?: boolean
+  debug?: boolean;
+  /** Color of debug helpers */
+  debugColor?: THREE.ColorRepresentation;
   /** The target object that is moved, default: null (the default camera) */
-  object?: React.MutableRefObject<THREE.Object3D>
+  object?: React.MutableRefObject<THREE.Object3D>;
   /** An object where the target looks towards, can also be a vector, default: null */
-  focus?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>
+  focus?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>;
+  /** Should the target object loop back to the start when reaching the end, default: true */
+  loop?: boolean;
   /** Position between 0 (start) and end (1), if this is not set useMotion().current must be used, default: null */
-  offset?: number
+  offset?: number;
   /** Optionally smooth the curve, default: false */
-  smooth?: boolean | number
+  smooth?: boolean | number;
   /** Damping tolerance, default: 0.00001 */
-  eps?: number
+  eps?: number;
   /** Damping factor for movement along the curve, default: 0.1 */
-  damping?: number
+  damping?: number;
   /** Damping factor for lookAt, default: 0.1 */
-  focusDamping?: number
+  focusDamping?: number;
   /** Damping maximum speed, default: Infinity */
-  maxSpeed?: number
+  maxSpeed?: number;
 }
 ```
 
@@ -113,4 +117,40 @@ function Loop() {
 <MotionPathControls>
   <cubicBezierCurve3 v0={[-5, -5, 0]} v1={[-10, 0, 0]} v2={[0, 3, 0]} v3={[6, 3, 0]} />
   <Loop />
+```
+
+You can also use the MotionPathControls's reference to control the motion state in the `motion` property.
+
+```tsx
+const motionPathRef = useRef<MotionPathRef>(null!)
+const motionPathObject = useRef<Mesh>(null!)
+
+useFrame(() => {
+  if (motionPathRef.current) {
+    motionPathRef.current.motion.current += 0.01
+  }
+})
+
+<MotionPathControls
+  ref={motionPathRef}
+  object={motionPathObject}
+  curves={[
+    new THREE.CubicBezierCurve3(
+      new THREE.Vector3(-5, -5, 0),
+      new THREE.Vector3(-10, 0, 0),
+      new THREE.Vector3(0, 3, 0),
+      new THREE.Vector3(6, 3, 0)
+    ),
+    new THREE.CubicBezierCurve3(
+      new THREE.Vector3(6, 3, 0),
+      new THREE.Vector3(10, 5, 5),
+      new THREE.Vector3(5, 3, 5),
+      new THREE.Vector3(5, 5, 5)
+    ),
+  ]}
+/>
+  <mesh ref={motionPathObject}>
+    <planeGeometry args={[10, 10, 1, 1]} />
+  </mesh>
+</MotionPathControls>
 ```

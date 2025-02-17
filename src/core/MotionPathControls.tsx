@@ -8,10 +8,14 @@ type MotionPathProps = JSX.IntrinsicElements['group'] & {
   curves?: THREE.Curve<THREE.Vector3>[]
   /** Show debug helpers */
   debug?: boolean
+  /** Color of debug helpers */
+  debugColor?: THREE.ColorRepresentation
   /** The target object that is moved, default: null (the default camera) */
   object?: React.MutableRefObject<THREE.Object3D>
   /** An object where the target looks towards, can also be a vector, default: null */
   focus?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>
+  /** Should the target object loop back to the start when reaching the end, default: true */
+  loop?: boolean
   /** Position between 0 (start) and end (1), if this is not set useMotion().current must be used, default: null */
   offset?: number
   /** Optionally smooth the curve, default: false */
@@ -45,46 +49,52 @@ type MotionState = {
   next: THREE.Vector3
 }
 
+export type MotionPathRef = THREE.Group & { motion: MotionState }
+
 const isObject3DRef = (ref: any): ref is React.MutableRefObject<THREE.Object3D> =>
   ref?.current instanceof THREE.Object3D
 
-const context = /* @__PURE__ */ React.createContext<MotionState>(null!)
+const MotionContext = /* @__PURE__ */ React.createContext<MotionState>(null!)
 
 export function useMotion() {
-  return React.useContext(context) as MotionState
+  const context = React.useContext(MotionContext)
+  if (!context) throw new Error('useMotion hook must be used in a MotionPathControls component.')
+  return context
 }
 
-function Debug({ points = 50 }: { points?: number }) {
+function Debug({ points = 50, color = 'black' }: { points?: number; color?: THREE.ColorRepresentation }) {
   const { path } = useMotion()
   const [dots, setDots] = React.useState<THREE.Vector3[]>([])
-  const [material] = React.useState(() => new THREE.MeshBasicMaterial({ color: 'black' }))
-  const [geometry] = React.useState(() => new THREE.SphereGeometry(0.025, 16, 16))
+
+  const material = React.useMemo(() => new THREE.MeshBasicMaterial({ color: color }), [color])
+  const geometry = React.useMemo(() => new THREE.SphereGeometry(0.025, 16, 16), [])
+
   const last = React.useRef<THREE.Curve<THREE.Vector3>[]>([])
+
   React.useEffect(() => {
     if (path.curves !== last.current) {
       setDots(path.getPoints(points))
       last.current = path.curves
     }
   })
-  return (
-    <>
-      {dots.map((item: { x: any; y: any; z: any }, index: any) => (
-        <mesh key={index} material={material} geometry={geometry} position={[item.x, item.y, item.z]} />
-      ))}
-    </>
-  )
+
+  return dots.map((item, index) => (
+    <mesh key={index} material={material} geometry={geometry} position={[item.x, item.y, item.z]} />
+  ))
 }
 
-export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, MotionPathProps>(
+export const MotionPathControls = /* @__PURE__ */ React.forwardRef<MotionPathRef, MotionPathProps>(
   (
     {
       children,
       curves = [],
-      object,
       debug = false,
-      smooth = false,
+      debugColor = 'black',
+      object,
       focus,
+      loop = true,
       offset = undefined,
+      smooth = false,
       eps = 0.00001,
       damping = 0.1,
       focusDamping = 0.1,
@@ -94,10 +104,12 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
     fref
   ) => {
     const { camera } = useThree()
-    const ref = React.useRef<any>()
-    const [path] = React.useState(() => new THREE.CurvePath<THREE.Vector3>())
 
-    const pos = React.useRef(offset ?? 0)
+    const ref = React.useRef<MotionPathRef>(null!)
+    const pos = React.useRef<number>(offset ?? 0)
+
+    const path = React.useMemo(() => new THREE.CurvePath<THREE.Vector3>(), [])
+
     const state = React.useMemo<MotionState>(
       () => ({
         focus,
@@ -114,10 +126,10 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
 
     React.useLayoutEffect(() => {
       path.curves = []
-      const _curves = curves.length > 0 ? curves : ref.current?.__r3f.objects
-      for (var i = 0; i < _curves.length; i++) path.add(_curves[i])
+      const _curves = curves.length > 0 ? curves : ((ref.current as any)?.__r3f?.objects ?? [])
+      for (let i = 0; i < _curves.length; i++) path.add(_curves[i])
 
-      //Smoothen curve
+      // Smoothen curve
       if (smooth) {
         const points = path.getPoints(typeof smooth === 'number' ? smooth : 1)
         const catmull = new THREE.CatmullRomCurve3(points)
@@ -126,18 +138,18 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
       path.updateArcLengths()
     })
 
-    React.useImperativeHandle(fref, () => ref.current, [])
+    React.useImperativeHandle(fref, () => Object.assign(ref.current, { motion: state }), [state])
 
     React.useLayoutEffect(() => {
       // When offset changes, normalise pos to avoid overshoot spinning
       pos.current = misc.repeat(pos.current, 1)
     }, [offset])
 
-    let last = 0
-    const [vec] = React.useState(() => new THREE.Vector3())
+    const vec = React.useMemo(() => new THREE.Vector3(), [])
 
     useFrame((_state, delta) => {
-      last = state.offset
+      const lastOffset = state.offset
+
       easing.damp(
         pos,
         'current',
@@ -148,15 +160,15 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
         undefined,
         eps
       )
-      state.offset = misc.repeat(pos.current, 1)
+      state.offset = loop ? misc.repeat(pos.current, 1) : misc.clamp(pos.current, 0, 1)
 
       if (path.getCurveLengths().length > 0) {
         path.getPointAt(state.offset, state.point)
         path.getTangentAt(state.offset, state.tangent).normalize()
-        path.getPointAt(misc.repeat(pos.current - (last - state.offset), 1), state.next)
+        path.getPointAt(misc.repeat(pos.current - (lastOffset - state.offset), 1), state.next)
         const target = object?.current instanceof THREE.Object3D ? object.current : camera
         target.position.copy(state.point)
-        //@ts-ignore
+
         if (focus) {
           easing.dampLookAt(
             target,
@@ -173,10 +185,10 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
 
     return (
       <group ref={ref} {...props}>
-        <context.Provider value={state}>
+        <MotionContext.Provider value={state}>
           {children}
-          {debug && <Debug />}
-        </context.Provider>
+          {debug && <Debug color={debugColor} />}
+        </MotionContext.Provider>
       </group>
     )
   }
