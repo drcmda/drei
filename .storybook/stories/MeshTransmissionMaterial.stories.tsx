@@ -56,7 +56,7 @@ function GelatinousCube(props: React.ComponentProps<typeof MeshTransmissionMater
 function MeshTransmissionMaterialScene(props: React.ComponentProps<typeof MeshTransmissionMaterial>) {
   return (
     <>
-      <ambientLight />
+      <ambientLight intensity={Math.PI} />
       <group position={[0, -2.5, 0]}>
         <Center top>
           <GelatinousCube {...props} />
@@ -70,7 +70,7 @@ function MeshTransmissionMaterialScene(props: React.ComponentProps<typeof MeshTr
           opacity={0.8}
           scale={20}
         >
-          <RandomizedLight radius={10} ambient={0.5} intensity={1} position={[2.5, 8, -2.5]} bias={0.001} />
+          <RandomizedLight radius={10} ambient={0.5} intensity={1 * Math.PI} position={[2.5, 8, -2.5]} bias={0.001} />
         </AccumulativeShadows>
       </group>
       <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2} autoRotate autoRotateSpeed={0.05} makeDefault />

@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Octahedron>
 
 function OctahedronScene(props: React.ComponentProps<typeof Octahedron>) {
-  const ref = useTurntable<React.ElementRef<typeof Octahedron>>()
+  const ref = useTurntable<React.ComponentRef<typeof Octahedron>>()
 
   return (
     <Octahedron ref={ref} {...props}>

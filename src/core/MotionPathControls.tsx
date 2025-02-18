@@ -1,17 +1,17 @@
 import * as THREE from 'three'
 import * as React from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree, Instance } from '@react-three/fiber'
 import { easing, misc } from 'maath'
 
-type MotionPathProps = JSX.IntrinsicElements['group'] & {
+export type MotionPathProps = Omit<ThreeElements['group'], 'ref'> & {
   /** An optional array of THREE curves */
   curves?: THREE.Curve<THREE.Vector3>[]
   /** Show debug helpers */
   debug?: boolean
   /** The target object that is moved, default: null (the default camera) */
-  object?: React.MutableRefObject<THREE.Object3D>
+  object?: React.RefObject<THREE.Object3D>
   /** An object where the target looks towards, can also be a vector, default: null */
-  focus?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>
+  focus?: [x: number, y: number, z: number] | React.RefObject<THREE.Object3D>
   /** Position between 0 (start) and end (1), if this is not set useMotion().current must be used, default: null */
   offset?: number
   /** Optionally smooth the curve, default: false */
@@ -32,9 +32,9 @@ type MotionState = {
   /** The combined curve */
   path: THREE.CurvePath<THREE.Vector3>
   /** The focus object */
-  focus: React.MutableRefObject<THREE.Object3D> | [x: number, y: number, z: number] | undefined
+  focus: React.RefObject<THREE.Object3D> | [x: number, y: number, z: number] | undefined
   /** The target object that is moved along the curve */
-  object: React.MutableRefObject<THREE.Object3D>
+  object: React.RefObject<THREE.Object3D>
   /** The 0-1 normalised and damped current goal position along curve */
   offset: number
   /** The current point on the curve */
@@ -45,8 +45,7 @@ type MotionState = {
   next: THREE.Vector3
 }
 
-const isObject3DRef = (ref: any): ref is React.MutableRefObject<THREE.Object3D> =>
-  ref?.current instanceof THREE.Object3D
+const isObject3DRef = (ref: any): ref is React.RefObject<THREE.Object3D> => ref?.current instanceof THREE.Object3D
 
 const context = /* @__PURE__ */ React.createContext<MotionState>(null!)
 
@@ -90,11 +89,11 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
       focusDamping = 0.1,
       maxSpeed = Infinity,
       ...props
-    }: MotionPathProps,
+    },
     fref
   ) => {
     const { camera } = useThree()
-    const ref = React.useRef<any>()
+    const ref = React.useRef<THREE.Group>(null!)
     const [path] = React.useState(() => new THREE.CurvePath<THREE.Vector3>())
 
     const pos = React.useRef(offset ?? 0)
@@ -114,7 +113,12 @@ export const MotionPathControls = /* @__PURE__ */ React.forwardRef<THREE.Group, 
 
     React.useLayoutEffect(() => {
       path.curves = []
-      const _curves = curves.length > 0 ? curves : ref.current?.__r3f.objects
+      const _curves =
+        curves.length > 0
+          ? curves
+          : (ref.current as THREE.Group & { __r3f: Instance<THREE.Group> }).__r3f!.children.map(
+              (instance) => instance.object
+            )
       for (var i = 0; i < _curves.length; i++) path.add(_curves[i])
 
       //Smoothen curve

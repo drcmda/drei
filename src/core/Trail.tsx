@@ -18,10 +18,10 @@ type Settings = {
   interval: number
 }
 
-type TrailProps = {
+export type TrailProps = {
   color?: ColorRepresentation
   attenuation?: (width: number) => number
-  target?: React.MutableRefObject<Object3D>
+  target?: React.RefObject<Object3D>
 } & Partial<Settings>
 
 const defaults: Partial<Settings> = {
@@ -45,7 +45,7 @@ export function useTrail(target: Object3D, settings: Partial<Settings>) {
     ...settings,
   } as Settings
 
-  const points = React.useRef<Float32Array>()
+  const points = React.useRef<Float32Array>(null)
   const [worldPosition] = React.useState(() => new Vector3())
 
   React.useLayoutEffect(() => {
@@ -145,7 +145,7 @@ export const Trail: ForwardRefComponent<
       }
     }
 
-    if (typeof matOverride?.props === 'object') {
+    if (typeof matOverride?.props === 'object' && matOverride?.props !== null) {
       m.setValues(matOverride.props)
     }
 

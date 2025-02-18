@@ -58,8 +58,7 @@ export const AxisArrow: React.FC<{ direction: THREE.Vector3; axis: 0 | 1 | 2 }> 
     userData,
   } = React.useContext(context)
 
-  // @ts-expect-error new in @react-three/fiber@7.0.5
-  const camControls = useThree((state) => state.controls) as { enabled: boolean }
+  const camControls = useThree((state) => state.controls) as unknown as { enabled: boolean } | undefined
   const divRef = React.useRef<HTMLDivElement>(null!)
   const objRef = React.useRef<THREE.Group>(null!)
   const clickInfo = React.useRef<{ clickPoint: THREE.Vector3; dir: THREE.Vector3 } | null>(null)

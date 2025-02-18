@@ -1,4 +1,4 @@
-import { useThree } from '@react-three/fiber'
+import { ThreeElements, useThree } from '@react-three/fiber'
 import * as React from 'react'
 import { Mesh, Group } from 'three'
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree, SAH, SplitStrategy } from 'three-mesh-bvh'
@@ -27,7 +27,7 @@ export interface BVHOptions {
 }
 
 export type BvhProps = BVHOptions &
-  JSX.IntrinsicElements['group'] & {
+  ThreeElements['group'] & {
     /**Enabled, default: true */
     enabled?: boolean
     /** Use .raycastFirst to retrieve hits which is generally faster, default: false */
@@ -39,7 +39,7 @@ const isMesh = (child: any): child is Mesh => child.isMesh
 /**
  * @deprecated Use the Bvh component instead
  */
-export function useBVH(mesh: React.MutableRefObject<Mesh | undefined>, options?: BVHOptions) {
+export function useBVH(mesh: React.RefObject<Mesh | undefined>, options?: BVHOptions) {
   options = {
     strategy: SAH,
     verbose: false,

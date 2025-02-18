@@ -7,7 +7,7 @@ export type CycleRaycastProps = {
   preventDefault?: boolean
   scroll?: boolean
   keyCode?: number
-  portal?: React.MutableRefObject<HTMLElement>
+  portal?: React.RefObject<HTMLElement>
 }
 
 export function CycleRaycast({

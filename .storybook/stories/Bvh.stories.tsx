@@ -23,7 +23,7 @@ export default {
 type Story = StoryObj<typeof Bvh>
 
 function TorusBVH({ z = 0, ...props }: { z: number } & React.ComponentProps<typeof Bvh>) {
-  const mesh = React.useRef<React.ElementRef<typeof TorusKnot>>(null!)
+  const mesh = React.useRef<React.ComponentRef<typeof TorusKnot>>(null!)
 
   useHelper(mesh, MeshBVHHelper)
 
@@ -122,7 +122,7 @@ const DebugRayCast = ({ grp }) => {
 }
 
 function Scene(props: React.ComponentProps<typeof Bvh>) {
-  const grp = React.useRef<React.ElementRef<'group'>>(null)
+  const grp = React.useRef<React.ComponentRef<'group'>>(null)
 
   const { raycaster } = useThree()
   raycaster.firstHitOnly = true

@@ -45,7 +45,7 @@ function TubeScene(props: React.ComponentProps<typeof Tube>) {
     return new CustomSinCurve(10)
   }, [])
 
-  const ref = useTurntable<React.ElementRef<typeof Tube>>()
+  const ref = useTurntable<React.ComponentRef<typeof Tube>>()
 
   return (
     <Tube ref={ref} args={[path]} {...props}>

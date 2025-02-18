@@ -47,7 +47,7 @@ const CustomCamera = ({ ...props }: ComponentProps<typeof ArcballControls>) => {
    * we will render our scene in a render target and use it as a map.
    */
   const fbo = useFBO(400, 400)
-  const virtualCamera = useRef<OrthographicCamera | PerspectiveCameraType>()
+  const virtualCamera = useRef<PerspectiveCameraType>(null!)
   const [virtualScene] = useState(() => new Scene())
 
   useFrame(({ gl }) => {

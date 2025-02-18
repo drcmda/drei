@@ -12,7 +12,7 @@ sourcecode: src/core/MeshRefractionMaterial.tsx
 A convincing Glass/Diamond refraction material.
 
 ```tsx
-type MeshRefractionMaterialProps = JSX.IntrinsicElements['shaderMaterial'] & {
+type MeshRefractionMaterialProps = ThreeElements['shaderMaterial'] & {
   /** Environment map */
   envMap: THREE.CubeTexture | THREE.Texture
   /** Number of ray-cast bounces, it can be expensive to have too many, 2 */

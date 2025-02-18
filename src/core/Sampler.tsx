@@ -3,7 +3,7 @@ import * as React from 'react'
 import { MeshSurfaceSampler } from 'three-stdlib'
 
 import { Color, Group, InstancedBufferAttribute, InstancedMesh, Mesh, Object3D, Vector3 } from 'three'
-import { GroupProps } from '@react-three/fiber'
+import { ThreeElements } from '@react-three/fiber'
 
 type SamplePayload = {
   /**
@@ -37,7 +37,7 @@ type TransformPayload = SamplePayload & {
   sampledMesh: Mesh
 }
 
-type Props = {
+export type SamplerProps = Omit<ThreeElements['group'], 'ref'> & {
   /**
    * The mesh that will be used to sample.
    * Does not need to be in the scene graph.
@@ -78,11 +78,11 @@ export interface useSurfaceSamplerProps {
 }
 
 export function useSurfaceSampler(
-  mesh: React.MutableRefObject<Mesh>,
+  mesh: React.RefObject<Mesh>,
   count: number = 16,
   transform?: TransformFn,
   weight?: string,
-  instanceMesh?: React.MutableRefObject<InstancedMesh> | null
+  instanceMesh?: React.RefObject<InstancedMesh> | null
 ) {
   const [buffer, setBuffer] = React.useState<InstancedBufferAttribute>(() => {
     const arr = Array.from({ length: count }, () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]).flat()
@@ -146,15 +146,7 @@ export function useSurfaceSampler(
   return buffer
 }
 
-export function Sampler({
-  children,
-  weight,
-  transform,
-  instances,
-  mesh,
-  count = 16,
-  ...props
-}: React.PropsWithChildren<Props & GroupProps>) {
+export function Sampler({ children, weight, transform, instances, mesh, count = 16, ...props }: SamplerProps) {
   const group = React.useRef<Group>(null!)
   const instancedRef = React.useRef<InstancedMesh>(null!)
   const meshToSampleRef = React.useRef<Mesh>(null!)

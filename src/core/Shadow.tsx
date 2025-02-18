@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { Mesh, Color, DoubleSide, type PlaneGeometry, type MeshBasicMaterial } from 'three'
 import { ForwardRefComponent } from '../helpers/ts-utils'
+import { ThreeElements } from '@react-three/fiber'
 
-type Props = JSX.IntrinsicElements['mesh'] & {
+export type ShadowProps = Omit<ThreeElements['mesh'], 'ref'> & {
   colorStop?: number
   fog?: boolean
   color?: Color | number | string
@@ -12,9 +13,9 @@ type Props = JSX.IntrinsicElements['mesh'] & {
 
 export type ShadowType = Mesh<PlaneGeometry, MeshBasicMaterial>
 
-export const Shadow: ForwardRefComponent<Props, ShadowType> = /* @__PURE__ */ React.forwardRef(
+export const Shadow: ForwardRefComponent<ShadowProps, ShadowType> = /* @__PURE__ */ React.forwardRef(
   (
-    { fog = false, renderOrder, depthWrite = false, colorStop = 0.0, color = 'black', opacity = 0.5, ...props }: Props,
+    { fog = false, renderOrder, depthWrite = false, colorStop = 0.0, color = 'black', opacity = 0.5, ...props },
     ref
   ) => {
     const canvas = React.useMemo(() => {
@@ -37,7 +38,7 @@ export const Shadow: ForwardRefComponent<Props, ShadowType> = /* @__PURE__ */ Re
       return canvas
     }, [color, colorStop])
     return (
-      <mesh renderOrder={renderOrder} ref={ref as React.MutableRefObject<Mesh>} rotation-x={-Math.PI / 2} {...props}>
+      <mesh renderOrder={renderOrder} ref={ref as React.RefObject<Mesh>} rotation-x={-Math.PI / 2} {...props}>
         <planeGeometry />
         <meshBasicMaterial transparent opacity={opacity} fog={fog} depthWrite={depthWrite} side={DoubleSide}>
           <canvasTexture attach="map" args={[canvas]} />

@@ -24,7 +24,7 @@ sourcecode: src/core/Image.tsx
 A shader-based image component with auto-cover (similar to css/background: cover).
 
 ```tsx
-export type ImageProps = Omit<JSX.IntrinsicElements['mesh'], 'scale'> & {
+export type ImageProps = Omit<ThreeElements['mesh'], 'scale'> & {
   segments?: number
   scale?: number | [number, number]
   color?: Color

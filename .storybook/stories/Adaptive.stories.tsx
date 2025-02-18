@@ -60,7 +60,7 @@ function AdaptiveScene(props: ComponentProps<typeof AdaptiveDpr>) {
         <Archer />
       </Suspense>
       <directionalLight
-        intensity={0.2}
+        intensity={0.2 * Math.PI}
         position={[10, 10, 5]}
         shadow-mapSize-width={64}
         shadow-mapSize-height={64}

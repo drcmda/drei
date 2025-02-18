@@ -1,6 +1,6 @@
 /* eslint react-hooks/exhaustive-deps: 1 */
 import * as React from 'react'
-import { useFrame, Vector3 } from '@react-three/fiber'
+import { ThreeElements, useFrame, Vector3 } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Instances, Instance } from './Instances'
 import { Billboard } from './Billboard'
@@ -94,7 +94,7 @@ export type SpriteAnimatorProps = {
    * @see https://threejs.org/docs/#api/en/core/Object3D
    */
   meshProps?: CommonMeshProps
-} & JSX.IntrinsicElements['group']
+} & Omit<ThreeElements['group'], 'ref'>
 
 type SpriteAnimatorState = {
   current?: number
@@ -503,7 +503,7 @@ export const SpriteAnimator = /* @__PURE__ */ React.forwardRef<THREE.Group, Spri
     }
 
     return (
-      <group {...props} ref={ref} scale={multiplyScale(aspect, props.scale)}>
+      <group {...props} ref={ref} scale={multiplyScale(aspect, props.scale as Scale | undefined)}>
         <context.Provider value={state}>
           {asSprite && (
             <Billboard>

@@ -6,7 +6,7 @@ import { clear, suspend } from 'suspend-react'
 
 const FaceLandmarkerContext = /* @__PURE__ */ createContext({} as FaceLandmarkerImpl | undefined)
 
-type FaceLandmarkerProps = {
+export type FaceLandmarkerProps = {
   basePath?: string
   options?: FaceLandmarkerOptions
   children?: ReactNode

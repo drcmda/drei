@@ -42,7 +42,7 @@ function ReflectorScene({
   const roughnessMap = useTexture('roughness_floor.jpeg')
   const normalMap = useTexture('NORM.jpg')
   const distortionMap = useTexture('dist_map.jpeg')
-  const $box = React.useRef<React.ElementRef<typeof TorusKnot>>(null!)
+  const $box = React.useRef<React.ComponentRef<typeof TorusKnot>>(null!)
 
   React.useEffect(() => {
     distortionMap.wrapS = distortionMap.wrapT = RepeatWrapping
@@ -76,7 +76,7 @@ function ReflectorScene({
       <TorusKnot args={[0.5, 0.2, 128, 32]} ref={$box} position={[0, 1, 0]}>
         <meshPhysicalMaterial color="hotpink" />
       </TorusKnot>
-      <spotLight intensity={1} position={[10, 6, 10]} penumbra={1} angle={0.3} />
+      <spotLight intensity={1 * Math.PI} position={[10, 6, 10]} penumbra={1} angle={0.3} />
       <Environment preset="city" />
     </>
   )

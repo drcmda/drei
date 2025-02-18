@@ -49,7 +49,7 @@ export type ViewProps = {
   /** The tracking element, the view will be cut according to its whereabouts
    * @deprecated You can use inline Views now, see: https://github.com/pmndrs/drei/pull/1784
    */
-  track?: React.MutableRefObject<HTMLElement>
+  track?: React.RefObject<HTMLElement>
 }
 
 export type ViewportProps = { Port: () => React.ReactNode } & React.ForwardRefExoticComponent<

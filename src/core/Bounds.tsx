@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as THREE from 'three'
 
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 
 export type SizeProps = {
   box: THREE.Box3
@@ -27,7 +27,7 @@ export type BoundsApi = {
   clip(): BoundsApi
 }
 
-export type BoundsProps = JSX.IntrinsicElements['group'] & {
+export type BoundsProps = Omit<ThreeElements['group'], 'ref'> & {
   maxDuration?: number
   margin?: number
   observe?: boolean

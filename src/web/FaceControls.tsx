@@ -13,7 +13,7 @@ import {
   RefObject,
   createContext,
   useContext,
-  ElementRef,
+  ComponentRef,
 } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import type { FaceLandmarker, FaceLandmarkerResult } from '@mediapipe/tasks-vision'
@@ -217,7 +217,7 @@ export const FaceControls = /* @__PURE__ */ forwardRef<FaceControlsApi, FaceCont
     // onVideoFrame (only used if !manualDetect)
     //
 
-    const videoTextureRef = useRef<ElementRef<typeof VideoTexture>>(null)
+    const videoTextureRef = useRef<ComponentRef<typeof VideoTexture>>(null)
 
     const [_faceLandmarkerResult, setFaceLandmarkerResult] = useState<FaceLandmarkerResult>()
     const faceLandmarker = useFaceLandmarker()

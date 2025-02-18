@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import * as React from 'react'
 import { ComponentProps } from 'react'
-import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture'
+import { FlakesTexture } from 'three-stdlib'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { Setup } from '../Setup'
@@ -48,7 +48,7 @@ function Suzi(props: ComponentProps<'group'>) {
     material.color.set('orange')
     material.roughness = 0
     material.normalMap = new THREE.CanvasTexture(
-      new FlakesTexture(),
+      new FlakesTexture() as HTMLCanvasElement,
       THREE.UVMapping,
       THREE.RepeatWrapping,
       THREE.RepeatWrapping

@@ -1,22 +1,20 @@
 import * as THREE from 'three'
 import * as React from 'react'
-import { ReactThreeFiber, extend, useFrame } from '@react-three/fiber'
+import { ThreeElement, ThreeElements, extend, useFrame } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      positionPoint: ReactThreeFiber.Object3DNode<PositionPoint, typeof PositionPoint>
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    positionPoint: ThreeElement<typeof PositionPoint>
   }
 }
 
 type Api = {
-  getParent: () => React.MutableRefObject<THREE.Points>
+  getParent: () => React.RefObject<THREE.Points>
   subscribe: (ref) => void
 }
 
-type PointsInstancesProps = JSX.IntrinsicElements['points'] & {
+export type PointsInstancesProps = Omit<ThreeElements['points'], 'ref'> & {
   range?: number
   limit?: number
 }
@@ -29,8 +27,8 @@ const _position = /* @__PURE__ */ new THREE.Vector3()
 export class PositionPoint extends THREE.Group {
   size: number
   color: THREE.Color
-  instance: React.MutableRefObject<THREE.Points | undefined>
-  instanceKey: React.MutableRefObject<JSX.IntrinsicElements['positionPoint'] | undefined>
+  instance: React.RefObject<THREE.Points | undefined>
+  instanceKey: React.RefObject<PositionPoint | undefined>
   constructor() {
     super()
     this.size = 0
@@ -94,7 +92,7 @@ const PointsInstances: ForwardRefComponent<PointsInstancesProps, THREE.Points> =
 >(({ children, range, limit = 1000, ...props }, ref) => {
   const parentRef = React.useRef<THREE.Points>(null!)
   React.useImperativeHandle(ref, () => parentRef.current, [])
-  const [refs, setRefs] = React.useState<React.MutableRefObject<PositionPoint>[]>([])
+  const [refs, setRefs] = React.useState<React.RefObject<PositionPoint>[]>([])
   const [[positions, colors, sizes]] = React.useState(() => [
     new Float32Array(limit * 3),
     Float32Array.from({ length: limit * 3 }, () => 1),
@@ -140,35 +138,17 @@ const PointsInstances: ForwardRefComponent<PointsInstancesProps, THREE.Points> =
   return (
     <points userData={{ instances: refs }} matrixAutoUpdate={false} ref={parentRef} raycast={() => null} {...props}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-          usage={THREE.DynamicDrawUsage}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          count={colors.length / 3}
-          array={colors}
-          itemSize={3}
-          usage={THREE.DynamicDrawUsage}
-        />
-        <bufferAttribute
-          attach="attributes-size"
-          count={sizes.length}
-          array={sizes}
-          itemSize={1}
-          usage={THREE.DynamicDrawUsage}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} usage={THREE.DynamicDrawUsage} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} usage={THREE.DynamicDrawUsage} />
+        <bufferAttribute attach="attributes-size" args={[sizes, 1]} usage={THREE.DynamicDrawUsage} />
       </bufferGeometry>
       <context.Provider value={api}>{children}</context.Provider>
     </points>
   )
 })
 
-export const Point: ForwardRefComponent<JSX.IntrinsicElements['positionPoint'], PositionPoint> =
-  /* @__PURE__ */ React.forwardRef(({ children, ...props }: JSX.IntrinsicElements['positionPoint'], ref) => {
+export const Point: ForwardRefComponent<ThreeElements['positionPoint'], PositionPoint> =
+  /* @__PURE__ */ React.forwardRef(({ children, ...props }: ThreeElements['positionPoint'], ref) => {
     React.useMemo(() => extend({ PositionPoint }), [])
     const group = React.useRef<PositionPoint>(null!)
     React.useImperativeHandle(ref, () => group.current, [])
@@ -184,7 +164,7 @@ export const Point: ForwardRefComponent<JSX.IntrinsicElements['positionPoint'], 
 /**
  * Buffer implementation, relies on complete buffers of the correct number, leaves it to the user to update them
  */
-type PointsBuffersProps = JSX.IntrinsicElements['points'] & {
+export type PointsBuffersProps = ThreeElements['points'] & {
   // a buffer containing all points position
   positions: Float32Array
   colors?: Float32Array
@@ -210,28 +190,20 @@ export const PointsBuffer: ForwardRefComponent<PointsBuffersProps, THREE.Points>
   return (
     <points ref={pointsRef} {...props}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / stride}
-          array={positions}
-          itemSize={stride}
-          usage={THREE.DynamicDrawUsage}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, stride]} usage={THREE.DynamicDrawUsage} />
         {colors && (
           <bufferAttribute
             attach="attributes-color"
+            args={[colors, stride]}
             count={colors.length / stride}
-            array={colors}
-            itemSize={3}
             usage={THREE.DynamicDrawUsage}
           />
         )}
         {sizes && (
           <bufferAttribute
             attach="attributes-size"
+            args={[sizes, 1]}
             count={sizes.length / stride}
-            array={sizes}
-            itemSize={1}
             usage={THREE.DynamicDrawUsage}
           />
         )}

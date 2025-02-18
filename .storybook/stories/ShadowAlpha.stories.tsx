@@ -41,7 +41,7 @@ function ShadowAlphaScene(props: React.ComponentProps<typeof ShadowAlpha>) {
       </Plane>
 
       <directionalLight castShadow position={[10, 40, 10]} />
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.5 * Math.PI} />
     </>
   )
 }

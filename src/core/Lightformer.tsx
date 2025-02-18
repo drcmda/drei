@@ -1,9 +1,9 @@
-import { applyProps, ReactThreeFiber } from '@react-three/fiber'
+import { applyProps, ReactThreeFiber, ThreeElements } from '@react-three/fiber'
 import * as React from 'react'
 import * as THREE from 'three'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type LightProps = JSX.IntrinsicElements['mesh'] & {
+export type LightProps = Omit<ThreeElements['mesh'], 'ref'> & {
   args?: any[]
   map?: THREE.Texture
   toneMapped?: boolean
@@ -12,7 +12,7 @@ export type LightProps = JSX.IntrinsicElements['mesh'] & {
   scale?: number | [number, number, number] | [number, number]
   intensity?: number
   target?: boolean | [number, number, number] | THREE.Vector3
-  light?: Partial<JSX.IntrinsicElements['pointLight']>
+  light?: Partial<ThreeElements['pointLight']>
 }
 
 export const Lightformer: ForwardRefComponent<LightProps, THREE.Mesh> = /* @__PURE__ */ React.forwardRef(
@@ -29,7 +29,7 @@ export const Lightformer: ForwardRefComponent<LightProps, THREE.Mesh> = /* @__PU
       target = [0, 0, 0],
       children,
       ...props
-    }: LightProps,
+    },
     forwardRef
   ) => {
     // Apply emissive power

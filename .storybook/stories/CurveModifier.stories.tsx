@@ -9,15 +9,13 @@ import { CurveModifier, CurveModifierRef } from '../../src'
 
 extend({ StdText: TextGeometry })
 
-type TextGeometryImpl = JSX.IntrinsicElements['extrudeGeometry'] & {
+type TextGeometryImpl = ThreeElements['extrudeGeometry'] & {
   args: [string, TextGeometryParameters]
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      stdText: TextGeometryImpl
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    stdText: TextGeometryImpl
   }
 }
 

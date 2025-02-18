@@ -51,7 +51,7 @@ function TextureScene2(props: React.ComponentProps<typeof Texture>) {
     <Texture {...props}>
       {(textures) => (
         <Icosahedron position={[0, 0, 0]}>
-          <meshStandardMaterial {...textures} metalness={1} />
+          <meshStandardMaterial {...(textures as any)} metalness={1} />
         </Icosahedron>
       )}
     </Texture>

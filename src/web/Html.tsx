@@ -14,7 +14,7 @@ import {
   Mesh,
 } from 'three'
 import { Assign } from 'utility-types'
-import { ReactThreeFiber, useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
 const v1 = /* @__PURE__ */ new Vector3()
@@ -117,13 +117,12 @@ function isRefObject(ref: any): ref is React.RefObject<any> {
   return ref && typeof ref === 'object' && 'current' in ref
 }
 
-export interface HtmlProps
-  extends Omit<Assign<React.HTMLAttributes<HTMLDivElement>, ReactThreeFiber.Object3DNode<Group, typeof Group>>, 'ref'> {
+export interface HtmlProps extends Omit<Assign<React.HTMLAttributes<HTMLDivElement>, ThreeElements['group']>, 'ref'> {
   prepend?: boolean
   center?: boolean
   fullscreen?: boolean
   eps?: number
-  portal?: React.MutableRefObject<HTMLElement>
+  portal?: React.RefObject<HTMLElement>
   distanceFactor?: number
   sprite?: boolean
   transform?: boolean
@@ -176,7 +175,7 @@ export const Html: ForwardRefComponent<HtmlProps, HTMLDivElement> = /* @__PURE__
     const { gl, camera, scene, size, raycaster, events, viewport } = useThree()
 
     const [el] = React.useState(() => document.createElement(as))
-    const root = React.useRef<ReactDOM.Root>()
+    const root = React.useRef<ReactDOM.Root>(null)
     const group = React.useRef<Group>(null!)
     const oldZoom = React.useRef(0)
     const oldPosition = React.useRef([0, 0])

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as THREE from 'three'
-import { extend, useThree, useFrame } from '@react-three/fiber'
+import { extend, useThree, useFrame, ThreeElements } from '@react-three/fiber'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { Setup } from '../Setup'
@@ -47,22 +47,18 @@ const ColorShiftMaterial = shaderMaterial(
 
 extend({ ColorShiftMaterial })
 
-type ColorShiftMaterialImpl = {
-  time: number
-  resolution: number[]
-} & JSX.IntrinsicElements['shaderMaterial']
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      colorShiftMaterial: ColorShiftMaterialImpl
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    colorShiftMaterial: ThreeElements['shaderMaterial'] & {
+      time: number
+      resolution: number[]
     }
   }
 }
 
 function ScreenQuadScene(props: React.ComponentProps<typeof ScreenQuad>) {
   const size = useThree((state) => state.size)
-  const ref = React.useRef<React.ElementRef<'colorShiftMaterial'>>(null!)
+  const ref = React.useRef<ThreeElements['colorShiftMaterial']>(null!)
 
   useFrame((state) => {
     if (ref.current.uniforms) {

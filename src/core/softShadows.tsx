@@ -17,7 +17,7 @@ import * as React from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 
-type SoftShadowsProps = {
+export type SoftShadowsProps = {
   /** Size of the light source (the larger the softer the light), default: 25 */
   size?: number
   /** Number of samples (more samples less noise but more expensive), default: 10 */

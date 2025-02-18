@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-type RefType<T> = React.MutableRefObject<T> | ((state: T) => void)
+type RefType<T> = React.RefObject<T> | ((state: T) => void)
 
 function call<T>(ref: RefType<T> | undefined, value: T | null) {
   if (typeof ref === 'function') ref(value as T)

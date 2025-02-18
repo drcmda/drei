@@ -35,8 +35,8 @@ function MarchingCubesScene({
   planeY?: boolean
   planeZ?: boolean
 } & React.ComponentProps<typeof MarchingCubes>) {
-  const cubeRefOne = React.useRef<React.ElementRef<typeof MarchingCube>>(null)
-  const cubeRefTwo = React.useRef<React.ElementRef<typeof MarchingCube>>(null)
+  const cubeRefOne = React.useRef<React.ComponentRef<typeof MarchingCube>>(null)
+  const cubeRefTwo = React.useRef<React.ComponentRef<typeof MarchingCube>>(null)
 
   useFrame(({ clock }) => {
     if (!cubeRefOne.current || !cubeRefTwo.current) return

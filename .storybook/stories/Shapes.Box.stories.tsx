@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Box>
 
 function BoxScene(props: React.ComponentProps<typeof Box>) {
-  const ref = useTurntable<React.ElementRef<typeof Box>>()
+  const ref = useTurntable<React.ComponentRef<typeof Box>>()
 
   return (
     <Box ref={ref} {...props}>

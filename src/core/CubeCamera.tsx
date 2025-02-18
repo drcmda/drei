@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { HalfFloatType, Fog, FogExp2, WebGLCubeRenderTarget, Texture, Group } from 'three'
 import * as React from 'react'
 import { useEffect, useMemo } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 
 export type CubeCameraOptions = {
   /** Resolution of the FBO, 256 */
@@ -54,14 +54,23 @@ export function useCubeCamera({ resolution = 256, near = 0.1, far = 1000, envMap
   }
 }
 
-type Props = Omit<JSX.IntrinsicElements['group'], 'children'> & {
+export type CubeCameraProps = Omit<ThreeElements['group'], 'children'> & {
   /** The contents of CubeCamera will be hidden when filming the cube */
   children?: (tex: Texture) => React.ReactNode
   /** Number of frames to render, Infinity */
   frames?: number
 } & CubeCameraOptions
 
-export function CubeCamera({ children, frames = Infinity, resolution, near, far, envMap, fog, ...props }: Props) {
+export function CubeCamera({
+  children,
+  frames = Infinity,
+  resolution,
+  near,
+  far,
+  envMap,
+  fog,
+  ...props
+}: CubeCameraProps) {
   const ref = React.useRef<Group>(null!)
   const { fbo, camera, update } = useCubeCamera({
     resolution,

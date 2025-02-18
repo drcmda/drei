@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useThree, ThreeEvent } from '@react-three/fiber'
+import { useThree, ThreeEvent, ThreeElements } from '@react-three/fiber'
 import { CanvasTexture } from 'three'
 import { useGizmoContext } from './GizmoHelper'
 
@@ -9,7 +9,7 @@ type AxisProps = {
   scale?: [number, number, number]
 }
 
-type AxisHeadProps = JSX.IntrinsicElements['sprite'] & {
+type AxisHeadProps = Omit<ThreeElements['sprite'], 'ref'> & {
   arcStyle: string
   label?: string
   labelColor: string
@@ -19,7 +19,7 @@ type AxisHeadProps = JSX.IntrinsicElements['sprite'] & {
   onClick?: (e: ThreeEvent<MouseEvent>) => null
 }
 
-type GizmoViewportProps = JSX.IntrinsicElements['group'] & {
+type GizmoViewportProps = ThreeElements['group'] & {
   axisColors?: [string, string, string]
   axisScale?: [number, number, number]
   labels?: [string, string, string]

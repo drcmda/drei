@@ -1,6 +1,6 @@
 import { createPortal, useFrame } from '@react-three/fiber'
 import React, { ComponentProps, useRef, useState } from 'react'
-import { Scene } from 'three'
+import * as THREE from 'three'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { Setup } from '../Setup'
@@ -47,9 +47,9 @@ const CameraControlsScene2 = (props: ComponentProps<typeof CameraControls>) => {
    * we will render our scene in a render target and use it as a map.
    */
   const fbo = useFBO(400, 400)
-  const virtualCamera = useRef<CameraControls['camera']>()
-  const [virtualScene] = useState(() => new Scene())
-  const cameraControlRef = useRef<CameraControls>(null)
+  const virtualCamera = useRef<THREE.PerspectiveCamera>(null!)
+  const [virtualScene] = useState(() => new THREE.Scene())
+  const cameraControlRef = useRef<CameraControls>(null!)
 
   useFrame(({ gl }) => {
     if (virtualCamera.current) {

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as THREE from 'three'
 import { SelectionBox } from 'three-stdlib'
-import { useThree } from '@react-three/fiber'
+import { ThreeElements, useThree } from '@react-three/fiber'
 import { shallow } from 'zustand/shallow'
 
 const context = /* @__PURE__ */ React.createContext<THREE.Object3D[]>([])
 
-type Props = JSX.IntrinsicElements['group'] & {
+export type SelectProps = Omit<ThreeElements['group'], 'ref'> & {
   /** Allow multi select, default: false */
   multiple?: boolean
   /** Allow box select, default: false */
@@ -33,15 +33,17 @@ export function Select({
   backgroundColor = 'rgba(75, 160, 255, 0.1)',
   filter: customFilter = (item) => item,
   ...props
-}: Props) {
+}: SelectProps) {
   const [downed, down] = React.useState(false)
   const { setEvents, camera, raycaster, gl, controls, size, get } = useThree()
   const [hovered, hover] = React.useState(false)
   const [active, dispatch] = React.useReducer(
+    // @ts-expect-error
     (state, { object, shift }: { object?: THREE.Object3D | THREE.Object3D[]; shift?: boolean }): THREE.Object3D[] => {
       if (object === undefined) return []
       else if (Array.isArray(object)) return object
       else if (!shift) return state[0] === object ? [] : [object]
+      // @ts-expect-error
       else if (state.includes(object)) return state.filter((o) => o !== object)
       else return [object, ...state]
     },

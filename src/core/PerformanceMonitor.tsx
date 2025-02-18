@@ -24,10 +24,10 @@ export type PerformanceMonitorApi = {
   flipped: number
   fallback: boolean
   subscriptions: Map<Symbol, Partial<PerformanceMonitorHookApi>>
-  subscribe: (ref: React.MutableRefObject<Partial<PerformanceMonitorHookApi>>) => () => void
+  subscribe: (ref: React.RefObject<Partial<PerformanceMonitorHookApi>>) => () => void
 }
 
-type PerformanceMonitorProps = {
+export type PerformanceMonitorProps = {
   /** How much time in milliseconds to collect an average fps, 250 */
   ms?: number
   /** How many interations of averages to collect, 10 */

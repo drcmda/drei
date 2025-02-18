@@ -22,7 +22,7 @@ export default {
 type Story = StoryObj<typeof RoundedBox>
 
 function RoundedBoxScene(props: React.ComponentProps<typeof RoundedBox>) {
-  const ref = useTurntable<React.ElementRef<typeof RoundedBox>>()
+  const ref = useTurntable<React.ComponentRef<typeof RoundedBox>>()
 
   return (
     <RoundedBox ref={ref} {...props}>
@@ -44,11 +44,11 @@ export const RoundedBoxSt = {
 //
 
 function RoundedBoxScene2(props: React.ComponentProps<typeof RoundedBox>) {
-  const ref = useTurntable<React.ElementRef<typeof RoundedBox>>()
+  const ref = useTurntable<React.ComponentRef<typeof RoundedBox>>()
 
   return (
     <>
-      <spotLight position={[35, 35, 35]} intensity={2} />
+      <spotLight position={[35, 35, 35]} intensity={2 * Math.PI} />
       <RoundedBox ref={ref} {...props}>
         <meshPhongMaterial color="#f3f3f3" />
       </RoundedBox>

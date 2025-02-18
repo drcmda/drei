@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Vector3 } from 'three'
-import { Canvas, Props as CanvasProps } from '@react-three/fiber'
+import { Canvas, CanvasProps } from '@react-three/fiber'
 
 import { OrbitControls } from '../src'
 
@@ -25,8 +25,8 @@ export const Setup = ({
     {children}
     {lights && (
       <>
-        <ambientLight intensity={0.8} />
-        <pointLight intensity={1} position={[0, 6, 0]} />
+        <ambientLight intensity={0.8 * Math.PI} />
+        <pointLight intensity={1 * Math.PI} position={[0, 6, 0]} />
       </>
     )}
     {controls && <OrbitControls makeDefault />}

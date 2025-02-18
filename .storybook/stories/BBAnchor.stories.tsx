@@ -30,7 +30,7 @@ function BBAnchorScene({
   drawBoundingBox: boolean
   children?: React.ReactNode
 }) {
-  const ref = React.useRef(null)
+  const ref = React.useRef<THREE.Mesh<THREE.IcosahedronGeometry>>(null!)
 
   useHelper(drawBoundingBox && ref, BoxHelper, 'cyan')
 

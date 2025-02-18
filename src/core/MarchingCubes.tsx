@@ -2,11 +2,11 @@ import * as THREE from 'three'
 import * as React from 'react'
 import { Color, Group } from 'three'
 import { MarchingCubes as MarchingCubesImpl } from 'three-stdlib'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
 type Api = {
-  getParent: () => React.MutableRefObject<MarchingCubesImpl>
+  getParent: () => React.RefObject<MarchingCubesImpl>
 }
 
 const globalContext = /* @__PURE__ */ React.createContext<Api>(null!)
@@ -16,21 +16,11 @@ export type MarchingCubesProps = {
   maxPolyCount?: number
   enableUvs?: boolean
   enableColors?: boolean
-} & JSX.IntrinsicElements['group']
+} & Omit<ThreeElements['group'], 'ref'>
 
 export const MarchingCubes: ForwardRefComponent<MarchingCubesProps, MarchingCubesImpl> =
   /* @__PURE__ */ React.forwardRef(
-    (
-      {
-        resolution = 28,
-        maxPolyCount = 10000,
-        enableUvs = false,
-        enableColors = false,
-        children,
-        ...props
-      }: MarchingCubesProps,
-      ref
-    ) => {
+    ({ resolution = 28, maxPolyCount = 10000, enableUvs = false, enableColors = false, children, ...props }, ref) => {
       const marchingCubesRef = React.useRef<MarchingCubesImpl>(null!)
       React.useImperativeHandle(ref, () => marchingCubesRef.current, [])
       const marchingCubes = React.useMemo(
@@ -55,11 +45,11 @@ export const MarchingCubes: ForwardRefComponent<MarchingCubesProps, MarchingCube
     }
   )
 
-type MarchingCubeProps = {
+export type MarchingCubeProps = {
   strength?: number
   subtract?: number
   color?: Color
-} & JSX.IntrinsicElements['group']
+} & ThreeElements['group']
 
 export const MarchingCube: ForwardRefComponent<MarchingCubeProps, THREE.Group> = /* @__PURE__ */ React.forwardRef(
   ({ strength = 0.5, subtract = 12, color, ...props }: MarchingCubeProps, ref) => {
@@ -77,11 +67,11 @@ export const MarchingCube: ForwardRefComponent<MarchingCubeProps, THREE.Group> =
   }
 )
 
-type MarchingPlaneProps = {
+export type MarchingPlaneProps = {
   planeType?: 'x' | 'y' | 'z'
   strength?: number
   subtract?: number
-} & JSX.IntrinsicElements['group']
+} & ThreeElements['group']
 
 export const MarchingPlane: ForwardRefComponent<MarchingPlaneProps, THREE.Group> = /* @__PURE__ */ React.forwardRef(
   ({ planeType: _planeType = 'x', strength = 0.5, subtract = 12, ...props }: MarchingPlaneProps, ref) => {

@@ -1,14 +1,14 @@
-import { useFrame } from '@react-three/fiber'
 import * as React from 'react'
 import { Group, Quaternion } from 'three'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type BillboardProps = {
+export type BillboardProps = Omit<ThreeElements['group'], 'ref'> & {
   follow?: boolean
   lockX?: boolean
   lockY?: boolean
   lockZ?: boolean
-} & JSX.IntrinsicElements['group']
+}
 
 /**
  * Wraps children in a billboarded group. Sample usage:

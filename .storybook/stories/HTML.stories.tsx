@@ -31,7 +31,7 @@ function HTMLScene({
   color?: React.ComponentProps<'meshBasicMaterial'>['color']
   children?: React.ReactNode
 } & HtmlProps) {
-  const ref = useTurntable<React.ElementRef<'group'>>()
+  const ref = useTurntable<React.ComponentRef<'group'>>()
 
   return (
     <group ref={ref}>
@@ -123,8 +123,8 @@ function HTMLOrthographicScene(props: HtmlProps) {
           <Html {...props}>Orthographic</Html>
         }
       </Icosahedron>
-      <ambientLight intensity={0.8} />
-      <pointLight intensity={1} position={[0, 6, 0]} />
+      <ambientLight intensity={0.8 * Math.PI} />
+      <pointLight intensity={1 * Math.PI} position={[0, 6, 0]} />
     </>
   )
 }
@@ -164,8 +164,8 @@ export const HTMLCalculatePositionSt = {
 //
 
 function HTMLOccluderScene(props: HtmlProps) {
-  const turntableRef = useTurntable<React.ElementRef<'group'>>()
-  const occluderRef = React.useRef<React.ElementRef<typeof Icosahedron>>(null)
+  const turntableRef = useTurntable<React.ComponentRef<'group'>>()
+  const occluderRef = React.useRef<React.ComponentRef<typeof Icosahedron>>(null)
 
   return (
     <>
@@ -195,8 +195,8 @@ function HTMLOccluderScene(props: HtmlProps) {
           </Html>
         </Icosahedron>
       </group>
-      <ambientLight intensity={0.8} />
-      <pointLight intensity={1} position={[0, 6, 0]} />
+      <ambientLight intensity={0.8 * Math.PI} />
+      <pointLight intensity={1 * Math.PI} position={[0, 6, 0]} />
     </>
   )
 }

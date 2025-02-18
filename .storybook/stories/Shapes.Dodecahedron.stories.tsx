@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Dodecahedron>
 
 function DodecahedronScene(props: React.ComponentProps<typeof Dodecahedron>) {
-  const ref = useTurntable<React.ElementRef<typeof Dodecahedron>>()
+  const ref = useTurntable<React.ComponentRef<typeof Dodecahedron>>()
 
   return (
     <Dodecahedron ref={ref} {...props}>

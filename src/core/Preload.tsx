@@ -2,13 +2,13 @@ import { Object3D, Camera, WebGLCubeRenderTarget, CubeCamera, Scene } from 'thre
 import * as React from 'react'
 import { useThree } from '@react-three/fiber'
 
-type Props = {
+export type PreloadProps = {
   all?: boolean
   scene?: Object3D
   camera?: Camera
 }
 
-export function Preload({ all, scene, camera }: Props) {
+export function Preload({ all, scene, camera }: PreloadProps) {
   const gl = useThree(({ gl }) => gl)
   const dCamera = useThree(({ camera }) => camera)
   const dScene = useThree(({ scene }) => scene)

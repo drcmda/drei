@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { MathUtils } from 'three'
-import { useThree } from '@react-three/fiber'
-import { a, SpringConfig, useSpring } from '@react-spring/three'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useGesture } from '@use-gesture/react'
+import { easing } from 'maath'
 
 export type PresentationControlProps = {
-  snap?: Boolean | SpringConfig
+  snap?: Boolean | number
   global?: boolean
   cursor?: boolean
   speed?: number
@@ -13,7 +13,7 @@ export type PresentationControlProps = {
   rotation?: [number, number, number]
   polar?: [number, number]
   azimuth?: [number, number]
-  config?: any
+  damping?: number
   enabled?: boolean
   children?: React.ReactNode
   domElement?: HTMLElement
@@ -31,7 +31,7 @@ export function PresentationControls({
   zoom = 1,
   polar = [0, Math.PI / 2],
   azimuth = [-Infinity, Infinity],
-  config = { mass: 1, tension: 170, friction: 26 },
+  damping = 0.25,
 }: PresentationControlProps) {
   const events = useThree((state) => state.events)
   const gl = useThree((state) => state.gl)
@@ -50,8 +50,7 @@ export function PresentationControls({
     () => [MathUtils.clamp(rotation[0], ...rPolar), MathUtils.clamp(rotation[1], ...rAzimuth), rotation[2]],
     [rotation[0], rotation[1], rotation[2], rPolar, rAzimuth]
   )
-  const [spring, api] = useSpring(() => ({ scale: 1, rotation: rInitial, config }))
-  React.useEffect(() => void api.start({ scale: 1, rotation: rInitial, config }), [rInitial])
+
   React.useEffect(() => {
     if (global && cursor && enabled) {
       explDomElement.style.cursor = 'grab'
@@ -62,30 +61,36 @@ export function PresentationControls({
       }
     }
   }, [global, cursor, explDomElement, enabled])
+
+  const [animation] = React.useState({ scale: 1, rotation: rInitial, damping })
+  const ref = React.useRef<THREE.Group>(null!)
+  useFrame((state, delta) => {
+    easing.damp3(ref.current.scale, animation.scale, animation.damping, delta)
+    easing.dampE(ref.current.rotation, animation.rotation as any, animation.damping, delta)
+  })
+
   const bind = useGesture(
     {
       onHover: ({ last }) => {
         if (cursor && !global && enabled) explDomElement.style.cursor = last ? 'auto' : 'grab'
       },
-      onDrag: ({ down, delta: [x, y], memo: [oldY, oldX] = spring.rotation.animation.to || rInitial }) => {
+      onDrag: ({ down, delta: [x, y], memo: [oldY, oldX] = animation.rotation || rInitial }) => {
         if (!enabled) return [y, x]
         if (cursor) explDomElement.style.cursor = down ? 'grabbing' : 'grab'
         x = MathUtils.clamp(oldX + (x / size.width) * Math.PI * speed, ...rAzimuth)
         y = MathUtils.clamp(oldY + (y / size.height) * Math.PI * speed, ...rPolar)
-        const sConfig = snap && !down && typeof snap !== 'boolean' ? snap : config
-        api.start({
-          scale: down && y > rPolar[1] / 2 ? zoom : 1,
-          rotation: snap && !down ? rInitial : [y, x, 0],
-          config: (n) => (n === 'scale' ? { ...sConfig, friction: sConfig.friction * 3 } : sConfig),
-        })
+
+        animation.scale = down && y > rPolar[1] / 2 ? zoom : 1
+        animation.rotation = snap && !down ? rInitial : [y, x, 0]
+        animation.damping = snap && !down && typeof snap !== 'boolean' ? (snap as number) : damping
         return [y, x]
       },
     },
     { target: global ? explDomElement : undefined }
   )
   return (
-    <a.group {...bind?.()} {...(spring as any)}>
+    <group ref={ref} {...(bind?.() as any)}>
       {children}
-    </a.group>
+    </group>
   )
 }

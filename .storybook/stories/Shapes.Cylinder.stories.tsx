@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Cylinder>
 
 function CylinderScene(props: React.ComponentProps<typeof Cylinder>) {
-  const ref = useTurntable<React.ElementRef<typeof Cylinder>>()
+  const ref = useTurntable<React.ComponentRef<typeof Cylinder>>()
 
   return (
     <Cylinder ref={ref} {...props}>

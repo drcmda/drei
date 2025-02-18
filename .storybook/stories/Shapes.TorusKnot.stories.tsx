@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof TorusKnot>
 
 function TorusKnotScene(props: React.ComponentProps<typeof TorusKnot>) {
-  const ref = useTurntable<React.ElementRef<typeof TorusKnot>>()
+  const ref = useTurntable<React.ComponentRef<typeof TorusKnot>>()
 
   return (
     <TorusKnot ref={ref} {...props}>

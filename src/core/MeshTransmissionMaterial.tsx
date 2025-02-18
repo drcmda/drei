@@ -6,13 +6,13 @@
 
 import * as THREE from 'three'
 import * as React from 'react'
-import { extend, useFrame } from '@react-three/fiber'
+import { extend, ThreeElements, useFrame } from '@react-three/fiber'
 import { useFBO } from './Fbo'
 import { DiscardMaterial } from '../materials/DiscardMaterial'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
 type MeshTransmissionMaterialType = Omit<
-  JSX.IntrinsicElements['meshPhysicalMaterial'],
+  ThreeElements['meshPhysicalMaterial'],
   'args' | 'roughness' | 'thickness' | 'transmission'
 > & {
   /* Transmission, default: 1 */
@@ -41,7 +41,7 @@ type MeshTransmissionMaterialType = Omit<
   args?: [samples: number, transmissionSampler: boolean]
 }
 
-type MeshTransmissionMaterialProps = Omit<MeshTransmissionMaterialType, 'args'> & {
+export type MeshTransmissionMaterialProps = Omit<MeshTransmissionMaterialType, 'ref' | 'args'> & {
   /** transmissionSampler, you can use the threejs transmission sampler texture that is
    *  generated once for all transmissive materials. The upside is that it can be faster if you
    *  use multiple MeshPhysical and Transmission materials, the downside is that transmissive materials
@@ -72,11 +72,9 @@ interface Shader {
   fragmentShader: string
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      meshTransmissionMaterial: MeshTransmissionMaterialType
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    meshTransmissionMaterial: MeshTransmissionMaterialType
   }
 }
 
@@ -380,7 +378,7 @@ class MeshTransmissionMaterialImpl extends THREE.MeshPhysicalMaterial {
 
 export const MeshTransmissionMaterial: ForwardRefComponent<
   MeshTransmissionMaterialProps,
-  JSX.IntrinsicElements['meshTransmissionMaterial']
+  ThreeElements['meshTransmissionMaterial']
 > = /* @__PURE__ */ React.forwardRef(
   (
     {
@@ -404,7 +402,7 @@ export const MeshTransmissionMaterial: ForwardRefComponent<
   ) => {
     extend({ MeshTransmissionMaterial: MeshTransmissionMaterialImpl })
 
-    const ref = React.useRef<JSX.IntrinsicElements['meshTransmissionMaterial']>(null!)
+    const ref = React.useRef<ThreeElements['meshTransmissionMaterial']>(null!)
     const [discardMaterial] = React.useState(() => new DiscardMaterial())
     const fboBack = useFBO(backsideResolution || resolution)
     const fboMain = useFBO(resolution)
@@ -417,7 +415,7 @@ export const MeshTransmissionMaterial: ForwardRefComponent<
       ref.current.time = state.clock.elapsedTime
       // Render only if the buffer matches the built-in and no transmission sampler is set
       if (ref.current.buffer === fboMain.texture && !transmissionSampler) {
-        parent = (ref.current as any).__r3f.parent as THREE.Object3D
+        parent = (ref.current as any).__r3f.parent?.object as THREE.Object3D | undefined
         if (parent) {
           // Save defaults
           oldTone = state.gl.toneMapping

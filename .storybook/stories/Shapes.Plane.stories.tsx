@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Plane>
 
 function PlaneScene(props: React.ComponentProps<typeof Plane>) {
-  const ref = useTurntable<React.ElementRef<typeof Plane>>()
+  const ref = useTurntable<React.ComponentRef<typeof Plane>>()
 
   return (
     <Plane ref={ref} {...props}>

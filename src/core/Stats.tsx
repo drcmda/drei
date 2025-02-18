@@ -4,13 +4,13 @@ import { addEffect, addAfterEffect } from '@react-three/fiber'
 import StatsImpl from 'stats.js'
 import { useEffectfulState } from '../helpers/useEffectfulState'
 
-type Props = {
+export type StatsProps = {
   showPanel?: number
   className?: string
   parent?: React.RefObject<HTMLElement>
 }
 
-export function Stats({ showPanel = 0, className, parent }: Props): null {
+export function Stats({ showPanel = 0, className, parent }: StatsProps): null {
   const stats = useEffectfulState(() => new StatsImpl(), [])
   React.useEffect(() => {
     if (stats) {

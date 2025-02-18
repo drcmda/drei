@@ -22,7 +22,7 @@ export default {
 type Story = StoryObj<typeof Lathe>
 
 function LatheScene(props: React.ComponentProps<typeof Lathe>) {
-  const ref = useTurntable<React.ElementRef<typeof Lathe>>()
+  const ref = useTurntable<React.ComponentRef<typeof Lathe>>()
 
   return (
     <Lathe ref={ref} {...props}>

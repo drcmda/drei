@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Group } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 
-export type ScreenSpaceProps = {
+export type ScreenSpaceProps = Omit<ThreeElements['group'], 'ref'> & {
   depth?: number
-} & JSX.IntrinsicElements['group']
+}
 
 export const ScreenSpace: ForwardRefComponent<ScreenSpaceProps, Group> = /* @__PURE__ */ React.forwardRef<
   Group,

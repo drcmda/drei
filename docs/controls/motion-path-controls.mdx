@@ -12,15 +12,15 @@ sourcecode: src/core/MotionPathControls.tsx
 Motion path controls, it takes a path of bezier curves or catmull-rom curves as input and animates the passed `object` along that path. It can be configured to look upon an external object for staging or presentation purposes by adding a `focusObject` property (ref).
 
 ```tsx
-type MotionPathProps = JSX.IntrinsicElements['group'] & {
+type MotionPathProps = ThreeElements['group'] & {
   /** An optional array of THREE curves */
   curves?: THREE.Curve<THREE.Vector3>[]
   /** Show debug helpers */
   debug?: boolean
   /** The target object that is moved, default: null (the default camera) */
-  object?: React.MutableRefObject<THREE.Object3D>
+  object?: React.RefObject<THREE.Object3D>
   /** An object where the target looks towards, can also be a vector, default: null */
-  focus?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>
+  focus?: [x: number, y: number, z: number] | React.RefObject<THREE.Object3D>
   /** Position between 0 (start) and end (1), if this is not set useMotion().current must be used, default: null */
   offset?: number
   /** Optionally smooth the curve, default: false */
@@ -83,9 +83,9 @@ type MotionState = {
   /** The combined curve */
   path: THREE.CurvePath<THREE.Vector3>
   /** The focus object */
-  focus: React.MutableRefObject<THREE.Object3D<THREE.Event>> | [x: number, y: number, z: number] | undefined
+  focus: React.RefObject<THREE.Object3D<THREE.Event>> | [x: number, y: number, z: number] | undefined
   /** The target object that is moved along the curve */
-  object: React.MutableRefObject<THREE.Object3D<THREE.Event>>
+  object: React.RefObject<THREE.Object3D<THREE.Event>>
   /** The automated, 0-1 normalised and damped current goal position along curve */
   offset: number
   /** The current point on the curve */

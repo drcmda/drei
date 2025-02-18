@@ -1,11 +1,10 @@
-import * as THREE from 'three'
 import * as React from 'react'
-import { ReactThreeFiber, useFrame } from '@react-three/fiber'
+import { ThreeElement, useFrame } from '@react-three/fiber'
 import { Points, Vector3, Spherical, Color, AdditiveBlending, ShaderMaterial } from 'three'
 import { ForwardRefComponent } from '../helpers/ts-utils'
 import { version } from '../helpers/constants'
 
-type Props = {
+export type StarsProps = {
   radius?: number
   depth?: number
   count?: number
@@ -48,11 +47,9 @@ class StarfieldMaterial extends ShaderMaterial {
   }
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      starfieldMaterial: ReactThreeFiber.MaterialNode<StarfieldMaterial, []>
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    starfieldMaterial: ThreeElement<typeof StarfieldMaterial>
   }
 }
 
@@ -60,9 +57,9 @@ const genStar = (r: number) => {
   return new Vector3().setFromSpherical(new Spherical(r, Math.acos(1 - Math.random() * 2), Math.random() * 2 * Math.PI))
 }
 
-export const Stars: ForwardRefComponent<Props, Points> = /* @__PURE__ */ React.forwardRef(
-  ({ radius = 100, depth = 50, count = 5000, saturation = 0, factor = 4, fade = false, speed = 1 }: Props, ref) => {
-    const material = React.useRef<StarfieldMaterial>()
+export const Stars: ForwardRefComponent<StarsProps, Points> = /* @__PURE__ */ React.forwardRef(
+  ({ radius = 100, depth = 50, count = 5000, saturation = 0, factor = 4, fade = false, speed = 1 }, ref) => {
+    const material = React.useRef<StarfieldMaterial>(null)
     const [position, color, size] = React.useMemo(() => {
       const positions: any[] = []
       const colors: any[] = []
@@ -83,7 +80,7 @@ export const Stars: ForwardRefComponent<Props, Points> = /* @__PURE__ */ React.f
     const [starfieldMaterial] = React.useState(() => new StarfieldMaterial())
 
     return (
-      <points ref={ref as React.MutableRefObject<Points>}>
+      <points ref={ref as React.RefObject<Points>}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[position, 3]} />
           <bufferAttribute attach="attributes-color" args={[color, 3]} />

@@ -6,7 +6,7 @@ sourcecode: src/core/PerspectiveCamera.tsx
 [![](https://img.shields.io/badge/-storybook-%23ff69b4)](https://drei.vercel.app/?path=/story/camera-perspectivecamera--perspective-camera-scene-st)
 
 ```tsx
-type Props = Omit<JSX.IntrinsicElements['perspectiveCamera'], 'children'> & {
+type Props = Omit<ThreeElements['perspectiveCamera'], 'children'> & {
   /** Registers the camera as the system default, fiber will start rendering with it */
   makeDefault?: boolean
   /** Making it manual will stop responsiveness and you have to calculate aspect ratio yourself. */

@@ -15,7 +15,7 @@ sourcecode: src/core/Caustics.tsx
 Caustics are swirls of light that appear when light passes through transmissive surfaces. This component uses a raymarching technique to project caustics onto a catcher plane. It is based on [github/N8python/caustics](https://github.com/N8python/caustics).
 
 ```tsx
-type CausticsProps = JSX.IntrinsicElements['group'] & {
+type CausticsProps = ThreeElements['group'] & {
   /** How many frames it will render, set it to Infinity for runtime, default: 1 */
   frames?: number
   /** Enables visual cues to help you stage your scene, default: false */
@@ -37,7 +37,7 @@ type CausticsProps = JSX.IntrinsicElements['group'] & {
   /** Buffer resolution, default: 2048 */
   resolution?: number
   /** Camera position, it will point towards the contents bounds center, default: [5, 5, 5] */
-  lightSource?: [x: number, y: number, z: number] | React.MutableRefObject<THREE.Object3D>
+  lightSource?: [x: number, y: number, z: number] | React.RefObject<THREE.Object3D>
 }
 ```
 

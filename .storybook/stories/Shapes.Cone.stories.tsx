@@ -21,7 +21,7 @@ export default {
 type Story = StoryObj<typeof Cone>
 
 function ConeScene(props: React.ComponentProps<typeof Cone>) {
-  const ref = useTurntable<React.ElementRef<typeof Cone>>()
+  const ref = useTurntable<React.ComponentRef<typeof Cone>>()
 
   return (
     <Cone ref={ref} {...props}>

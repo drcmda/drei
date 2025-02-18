@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as THREE from 'three'
 import { ForwardRefComponent } from '../helpers/ts-utils'
+import { ThreeElements } from '@react-three/fiber'
 
 export type Args<T> = T extends new (...args: any) => any ? ConstructorParameters<T> : T
-export type ShapeProps<T> = Omit<JSX.IntrinsicElements['mesh'], 'args'> & { args?: Args<T> }
+export type ShapeProps<T> = Omit<ThreeElements['mesh'], 'ref' | 'args'> & { args?: Args<T> }
 
 function create<T>(type: string, effect?: (mesh: THREE.Mesh) => void): ForwardRefComponent<ShapeProps<T>, THREE.Mesh> {
   const El: any = type + 'Geometry'

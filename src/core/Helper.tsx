@@ -8,11 +8,11 @@ type HelperConstructor = new (...args: any[]) => any
 type HelperArgs<T> = T extends [infer _, ...infer R] ? R : never
 
 export function useHelper<T extends HelperConstructor>(
-  object3D: React.MutableRefObject<Object3D> | Falsey,
+  object3D: React.RefObject<Object3D> | Falsey,
   helperConstructor: T,
   ...args: HelperArgs<ConstructorParameters<T>>
 ) {
-  const helper = React.useRef<HelperType>()
+  const helper = React.useRef<HelperType>(null)
   const scene = useThree((state) => state.scene)
   React.useLayoutEffect(() => {
     let currentHelper: HelperType = undefined!
@@ -26,7 +26,7 @@ export function useHelper<T extends HelperConstructor>(
       currentHelper.traverse((child) => (child.raycast = () => null))
       scene.add(currentHelper)
       return () => {
-        helper.current = undefined
+        helper.current = undefined!
         scene.remove(currentHelper)
         currentHelper.dispose?.()
       }

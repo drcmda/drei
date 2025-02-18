@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
 import { Group, Matrix4, Object3D, OrthographicCamera as OrthographicCameraImpl, Quaternion, Vector3 } from 'three'
 import { OrthographicCamera } from './OrthographicCamera'
 import { OrbitControls as OrbitControlsType } from 'three-stdlib'
@@ -25,7 +25,7 @@ const targetPosition = /* @__PURE__ */ new Vector3()
 
 type ControlsProto = { update(delta?: number): void; target: Vector3 }
 
-export type GizmoHelperProps = JSX.IntrinsicElements['group'] & {
+export type GizmoHelperProps = ThreeElements['group'] & {
   alignment?:
     | 'top-left'
     | 'top-right'

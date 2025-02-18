@@ -47,7 +47,7 @@ export const MeshDistortMaterialSt = {
 //
 
 function MeshDistortMaterialRefScene(props: React.ComponentProps<typeof MeshDistortMaterial>) {
-  const material = React.useRef<React.ElementRef<typeof MeshDistortMaterial>>(null!)
+  const material = React.useRef<React.ComponentRef<typeof MeshDistortMaterial>>(null!)
 
   useFrame(({ clock }) => {
     material.current.distort = Math.sin(clock.getElapsedTime())

@@ -8,24 +8,11 @@ const isOrthographicCamera = (def: any): def is THREE.OrthographicCamera =>
 const col = /* @__PURE__ */ new THREE.Color()
 const tracked = /* @__PURE__ */ tunnel()
 
-/**
- * In `@react-three/fiber` after `v8.0.0` but prior to `v8.1.0`, `state.size` contained only dimension
- * information. After `v8.1.0`, position information (`top`, `left`) was added
- *
- * @todo remove this when drei supports v9 and up
- */
-type LegacyCanvasSize = {
-  height: number
-  width: number
-}
-
-type CanvasSize = LegacyCanvasSize & {
+type CanvasSize = {
   top: number
   left: number
-}
-
-function isNonLegacyCanvasSize(size: Record<string, number>): size is CanvasSize {
-  return 'top' in size
+  height: number
+  width: number
 }
 
 export type ContainerProps = {
@@ -34,12 +21,12 @@ export type ContainerProps = {
   index: number
   children?: React.ReactNode
   frames: number
-  rect: React.MutableRefObject<DOMRect>
+  rect: React.RefObject<DOMRect>
   /**
    * @deprecated You can use inline Views now, see: https://github.com/pmndrs/drei/pull/1784
    */
-  track?: React.MutableRefObject<HTMLElement>
-  canvasSize: LegacyCanvasSize | CanvasSize
+  track?: React.RefObject<HTMLElement>
+  canvasSize: CanvasSize
 }
 
 export type ViewProps = {
@@ -62,26 +49,27 @@ export type ViewProps = {
   /** The tracking element, the view will be cut according to its whereabouts
    * @deprecated You can use inline Views now, see: https://github.com/pmndrs/drei/pull/1784
    */
-  track?: React.MutableRefObject<HTMLElement>
+  track?: React.RefObject<HTMLElement>
 }
 
-function computeContainerPosition(canvasSize: LegacyCanvasSize | CanvasSize, trackRect: DOMRect) {
+function computeContainerPosition(canvasSize: CanvasSize, trackRect: DOMRect) {
   const { right, top, left: trackLeft, bottom: trackBottom, width, height } = trackRect
   const isOffscreen = trackRect.bottom < 0 || top > canvasSize.height || right < 0 || trackRect.left > canvasSize.width
-  if (isNonLegacyCanvasSize(canvasSize)) {
-    const canvasBottom = canvasSize.top + canvasSize.height
-    const bottom = canvasBottom - trackBottom
-    const left = trackLeft - canvasSize.left
-    return { position: { width, height, left, top, bottom, right }, isOffscreen }
-  }
-  // Fall back on old behavior if r3f < 8.1.0
-  const bottom = canvasSize.height - trackBottom
-  return { position: { width, height, top, left: trackLeft, bottom, right }, isOffscreen }
+
+  const canvasBottom = canvasSize.top + canvasSize.height
+  const bottom = canvasBottom - trackBottom
+  const left = trackLeft - canvasSize.left
+  return { position: { width, height, left, top, bottom, right }, isOffscreen }
 }
 
 function prepareSkissor(
   state: RootState,
-  { left, bottom, width, height }: LegacyCanvasSize & { top: number; left: number } & { bottom: number; right: number }
+  {
+    left,
+    bottom,
+    width,
+    height,
+  }: { width: number; height: number; top: number; left: number; bottom: number; right: number }
 ) {
   let autoClear
   const aspect = width / height
@@ -173,14 +161,6 @@ function Container({ visible = true, canvasSize, scene, index, children, frames,
       rootState.setEvents({ connected: old })
     }
   }, [track])
-
-  React.useEffect(() => {
-    if (isNonLegacyCanvasSize(canvasSize)) return
-    console.warn(
-      'Detected @react-three/fiber canvas size does not include position information. <View /> may not work as expected. ' +
-        'Upgrade to @react-three/fiber ^8.1.0 for support.\n See https://github.com/pmndrs/drei/issues/944'
-    )
-  }, [])
 
   return (
     <>
@@ -287,7 +267,7 @@ const HtmlView = /* @__PURE__ */ React.forwardRef(
   }
 )
 
-export type ViewportProps = { Port: () => JSX.Element } & React.ForwardRefExoticComponent<
+export type ViewportProps = { Port: () => React.JSX.Element } & React.ForwardRefExoticComponent<
   ViewProps & React.RefAttributes<HTMLElement | THREE.Group>
 >
 

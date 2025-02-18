@@ -1,4 +1,4 @@
-import { ReactThreeFiber, useThree } from '@react-three/fiber'
+import { ReactThreeFiber, ThreeElement, ThreeElements, useThree } from '@react-three/fiber'
 import * as React from 'react'
 import * as THREE from 'three'
 import { TransformControls as TransformControlsImpl } from 'three-stdlib'
@@ -8,9 +8,9 @@ type ControlsProto = {
   enabled: boolean
 }
 
-export type TransformControlsProps = ReactThreeFiber.Object3DNode<TransformControlsImpl, typeof TransformControlsImpl> &
-  JSX.IntrinsicElements['group'] & {
-    object?: THREE.Object3D | React.MutableRefObject<THREE.Object3D>
+export type TransformControlsProps = Omit<ThreeElement<typeof TransformControlsImpl>, 'ref' | 'args'> &
+  Omit<ThreeElements['group'], 'ref'> & {
+    object?: THREE.Object3D | React.RefObject<THREE.Object3D>
     enabled?: boolean
     axis?: string | null
     domElement?: HTMLElement
@@ -61,8 +61,7 @@ export const TransformControls: ForwardRefComponent<TransformControlsProps, Tran
       },
       ref
     ) => {
-      // @ts-expect-error new in @react-three/fiber@7.0.5
-      const defaultControls = useThree((state) => state.controls) as ControlsProto
+      const defaultControls = useThree((state) => state.controls) as unknown as ControlsProto | undefined
       const gl = useThree((state) => state.gl)
       const events = useThree((state) => state.events)
       const defaultCamera = useThree((state) => state.camera)
@@ -95,10 +94,10 @@ export const TransformControls: ForwardRefComponent<TransformControlsProps, Tran
         }
       }, [controls, defaultControls])
 
-      const onChangeRef = React.useRef<(e?: THREE.Event) => void>()
-      const onMouseDownRef = React.useRef<(e?: THREE.Event) => void>()
-      const onMouseUpRef = React.useRef<(e?: THREE.Event) => void>()
-      const onObjectChangeRef = React.useRef<(e?: THREE.Event) => void>()
+      const onChangeRef = React.useRef<((e?: THREE.Event) => void) | undefined>(undefined)
+      const onMouseDownRef = React.useRef<((e?: THREE.Event) => void) | undefined>(undefined)
+      const onMouseUpRef = React.useRef<((e?: THREE.Event) => void) | undefined>(undefined)
+      const onObjectChangeRef = React.useRef<((e?: THREE.Event) => void) | undefined>(undefined)
 
       React.useLayoutEffect(() => void (onChangeRef.current = onChange), [onChange])
       React.useLayoutEffect(() => void (onMouseDownRef.current = onMouseDown), [onMouseDown])

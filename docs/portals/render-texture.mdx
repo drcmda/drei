@@ -12,7 +12,7 @@ sourcecode: src/core/RenderTexture.tsx
 This component allows you to render a live scene into a texture which you can then apply to a material. The contents of it run inside a portal and are separate from the rest of the canvas, therefore you can have events in there, environment maps, etc.
 
 ```tsx
-type Props = JSX.IntrinsicElements['texture'] & {
+type Props = ThreeElements['texture'] & {
   /** Optional width of the texture, defaults to viewport bounds */
   width?: number
   /** Optional height of the texture, defaults to viewport bounds */

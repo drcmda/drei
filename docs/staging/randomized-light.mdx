@@ -5,7 +5,7 @@ title: RandomizedLight
 A randomized light that internally runs multiple lights and jiggles them. See below, you would normally pair it with `AccumulativeShadows`. This component is context aware, paired with AccumulativeShadows it will take the number of frames from its parent.
 
 ```tsx
-type RandomizedLightProps = JSX.IntrinsicElements['group'] & {
+type RandomizedLightProps = ThreeElements['group'] & {
   /** How many frames it will jiggle the lights, 1.
    *  Frames is context aware, if a provider like AccumulativeShadows exists, frames will be taken from there!  */
   frames?: number

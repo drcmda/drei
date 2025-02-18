@@ -7,7 +7,7 @@ sourcecode: src/core/Trail.tsx
 
 A hook to obtain an array of points that make up a [Trail](#trail). You can use this array to drive your own `MeshLine` or make a trail out of anything you please.
 
-Note: The hook returns a ref (`MutableRefObject<Vector3[]>`) this means updates to it will not trigger a re-draw, thus keeping this cheap.
+Note: The hook returns a ref (`RefObject<Vector3[]>`) this means updates to it will not trigger a re-draw, thus keeping this cheap.
 
 ```js
 const points = useTrail(

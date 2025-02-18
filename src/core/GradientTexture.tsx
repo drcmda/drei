@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useThree } from '@react-three/fiber'
+import { ThreeElements, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
 export enum GradientType {
@@ -7,7 +7,7 @@ export enum GradientType {
   Radial = 'radial',
 }
 
-type Props = {
+export type GradientTextureProps = {
   stops: Array<number>
   colors: Array<THREE.ColorRepresentation>
   attach?: string
@@ -16,7 +16,7 @@ type Props = {
   type?: GradientType
   innerCircleRadius?: number
   outerCircleRadius?: string | number
-} & Omit<JSX.IntrinsicElements['texture'], 'type'>
+} & Omit<ThreeElements['texture'], 'args' | 'type'>
 
 export function GradientTexture({
   stops,
@@ -27,7 +27,7 @@ export function GradientTexture({
   innerCircleRadius = 0,
   outerCircleRadius = 'auto',
   ...props
-}: Props) {
+}: GradientTextureProps) {
   const gl = useThree((state: any) => state.gl)
   const canvas: HTMLCanvasElement = React.useMemo(() => {
     const canvas = document.createElement('canvas')
@@ -67,6 +67,5 @@ export function GradientTexture({
     return canvas
   }, [stops])
 
-  // @ts-ignore ????
   return <canvasTexture colorSpace={gl.outputColorSpace} args={[canvas]} attach="map" {...props} />
 }

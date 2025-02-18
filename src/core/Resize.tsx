@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import * as React from 'react'
+import { ThreeElements } from '@react-three/fiber'
 
-export type ResizeProps = JSX.IntrinsicElements['group'] & {
+export type ResizeProps = Omit<ThreeElements['group'], 'ref'> & {
   /** Whether to fit into width (x axis), undefined */
   width?: boolean
   /** Whether to fit into height (y axis), undefined */

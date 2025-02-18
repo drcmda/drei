@@ -1,9 +1,10 @@
+import { ThreeElements } from '@react-three/fiber'
 import * as React from 'react'
 import { PlaneGeometry, BufferAttribute } from 'three'
 
 const easeInExpo = (x: number) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10))
 
-export type BackdropProps = JSX.IntrinsicElements['group'] & {
+export type BackdropProps = ThreeElements['group'] & {
   floor?: number
   segments?: number
   receiveShadow?: boolean

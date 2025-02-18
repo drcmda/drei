@@ -8,7 +8,7 @@ sourcecode: src/core/CubeCamera.tsx
 A [THREE.CubeCamera](https://threejs.org/docs/#api/en/cameras/CubeCamera) that returns its texture as a render-prop. It makes children invisible while rendering to the internal buffer so that they are not included in the reflection.
 
 ```tsx
-type Props = JSX.IntrinsicElements['group'] & {
+type Props = ThreeElements['group'] & {
   /** Number of frames to render, Infinity */
   frames?: number
   /** Resolution of the FBO, 256 */
